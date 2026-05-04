@@ -9,8 +9,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<!-- HubSpot Tracking -->
-<script type="text/javascript" id="hs-script-loader" async defer src="//js-na2.hs-scripts.com/245235481.js"></script>
 <style>
 :root {
   --dark:       #0a0f12;
@@ -1368,17 +1366,23 @@ function unlockDemo(e) {
     ts: new Date().toISOString()
   };
   try { localStorage.setItem('strata_demo_lead', JSON.stringify(lead)); } catch(err) {}
-  // Push lead to HubSpot CRM
-  try {
-    var _hsq = window._hsq = window._hsq || [];
-    _hsq.push(['identify', {
-      email: lead.email,
-      firstname: lead.firstName,
-      lastname: lead.lastName,
-      company: lead.company
-    }]);
-    _hsq.push(['trackPageView']);
-  } catch(err) {}
+  // Submit to HubSpot Forms API v3
+  fetch('https://api.hsforms.com/submissions/v3/integration/submit/245235481/ccba3db8-858b-4598-b7bc-f1702df04be5', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      fields: [
+        { name: 'firstname', value: lead.firstName },
+        { name: 'lastname',  value: lead.lastName  },
+        { name: 'email',     value: lead.email     },
+        { name: 'company',   value: lead.company   }
+      ],
+      context: {
+        pageUri: window.location.href,
+        pageName: document.title
+      }
+    })
+  }).catch(function() {});
   ['land', 'homebuilder'].forEach(function(v) { showDemoFrame(v); });
   return false;
 }
