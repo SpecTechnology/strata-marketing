@@ -507,7 +507,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <h1>Skip the prompt engineering.<br>Run the workflows your industry already needs.</h1>
       <p class="hero-sub">30+ pre-built workflows for civil engineers, land developers, legal teams, healthcare, CRE, and contractors. Every output cites the source standard. Every run leaves an audit trail. Every deliverable exports branded to your firm.</p>
       <div class="btn-group">
-        <a href="#" class="btn btn-primary btn-lg" onclick="showVertical('land');setTimeout(function(){scrollToDemo('land')},80);return false">Try the live demo &rarr;</a>
+        <a href="https://bookings.cloud.microsoft/bookwithme/user/09d775036b454a1a91a804b736e25673%40spec-technology.com?anonymous&ismsaljsauthenabled=true" target="_blank" class="btn btn-primary btn-lg">Book a Demo &rarr;</a>
         <a href="#" class="btn btn-outline-lt btn-lg" onclick="showPage('industries');return false">Browse workflows by industry</a>
       </div>
       <div class="hero-stats">
@@ -1408,9 +1408,15 @@ function showDemoFrame(v) {
 })();
 
 // Wire every "Ask a Question" link to the support email
+// Wire every "Book a Demo" link to Erika's booking page
 document.querySelectorAll('a').forEach(function(a) {
-  if (a.textContent.trim() === 'Ask a Question') {
+  var t = a.textContent.trim();
+  if (t === 'Ask a Question') {
     a.href = 'mailto:support@spec-technology.com';
+  } else if (t === 'Book a Demo' || t === 'Book a Demo →') {
+    a.href = 'https://bookings.cloud.microsoft/bookwithme/user/09d775036b454a1a91a804b736e25673%40spec-technology.com?anonymous&ismsaljsauthenabled=true';
+    a.target = '_blank';
+    a.removeAttribute('onclick');
   }
 });
 </script>
