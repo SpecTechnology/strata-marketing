@@ -474,34 +474,6 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
   .demo-frame-bar { flex-wrap: wrap; gap: 10px; }
 }
 
-/* ── Contact Modal ─────────────────────────────────────── */
-.contact-modal-overlay {
-  display: none; position: fixed; inset: 0; z-index: 2000;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(3px);
-  align-items: center; justify-content: center;
-}
-.contact-modal-overlay.active { display: flex; }
-.contact-modal {
-  background: #0f2340; border: 1px solid rgba(255,255,255,0.13);
-  border-radius: 16px; padding: 36px 36px 28px; width: 100%; max-width: 480px;
-  margin: 16px; position: relative; box-shadow: 0 28px 72px rgba(0,0,0,0.6);
-}
-.contact-modal-close {
-  position: absolute; top: 14px; right: 16px; background: none; border: none;
-  cursor: pointer; color: rgba(255,255,255,0.4); font-size: 26px; line-height: 1;
-  transition: color 150ms; padding: 4px 6px;
-}
-.contact-modal-close:hover { color: rgba(255,255,255,0.85); }
-.contact-modal h3 { color: #fff; font-size: 22px; margin: 0 0 8px; }
-.contact-modal .cm-sub { color: rgba(255,255,255,0.52); font-size: 14px; margin-bottom: 22px; line-height: 1.6; }
-.contact-modal .gate-input { margin-bottom: 10px; }
-.cm-error { color: #f87171; font-size: 13px; margin-bottom: 8px; display: none; }
-.cm-success { text-align: center; padding: 28px 0 12px; }
-.cm-success .cm-check { font-size: 44px; margin-bottom: 14px; }
-.cm-success h3 { color: #fff; font-size: 20px; margin-bottom: 8px; }
-.cm-success p { color: rgba(255,255,255,0.52); font-size: 15px; line-height: 1.6; }
-.cm-textarea { width: 100%; box-sizing: border-box; resize: vertical; min-height: 80px;
-  font-family: inherit; font-size: 15px; }
 </style>
 </head>
 <body>
@@ -519,8 +491,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <a href="#" onclick="showPage('audit');return false">Security</a>
     </div>
     <div class="nav-actions">
-      <a href="#" class="btn btn-outline btn-sm">Talk to our team</a>
-      <a href="#" class="btn btn-primary btn-sm" onclick="showVertical('land');setTimeout(function(){scrollToDemo('land')},80);return false">Try the live demo &rarr;</a>
+      <a href="#" class="btn btn-outline btn-sm">Ask a Question</a>
     </div>
   </div>
 </nav>
@@ -780,7 +751,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
     <p>Pick the workflows your team runs every day. We configure them to your standards, brand them to your firm, and stand them up — no configuration sprint, no prompt engineering, no blank canvas.</p>
     <div class="btn-group" style="justify-content:center">
       <a href="#" class="btn btn-white btn-lg" onclick="showVertical('land');setTimeout(function(){scrollToDemo('land')},80);return false">Try the live demo &rarr;</a>
-      <a href="#" class="btn btn-outline-lt btn-lg">Talk to our team</a>
+      <a href="#" class="btn btn-outline-lt btn-lg">Ask a Question</a>
     </div>
   </div>
 
@@ -801,7 +772,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
           <a onclick="showPage('workspace')">How It Works</a>
           <a onclick="showPage('audit')">Security</a>
           <a>Pricing</a>
-          <a>Talk to our team</a>
+          <a>Ask a Question</a>
         </div>
         <div class="ft-col">
           <h4>Industries</h4>
@@ -893,7 +864,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Land</span>
       <h1>First look, fast answer.<br>Go/no-go before the option expires.</h1>
       <p>Tract feasibility in minutes. An 18-month reimbursement projection across every district in one view. Deal optimization that shows you exactly what to change to hit your IRR. No spreadsheet sprawl.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('land');return false">Run a live feasibility — no signup &#8595;</a><a href="#" class="btn btn-outline-lt">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('land');return false">Run a live feasibility — no signup &#8595;</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -960,7 +931,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="result-item"><span class="result-chk">✓</span><p>Make go/no-go decisions with a full underwriting model behind them</p></div>
         <div class="result-item"><span class="result-chk">✓</span><p>Institutional deal knowledge in the platform — not in people's heads</p></div>
       </div>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('land');return false">Try the live demo &#8593;</a><a href="#" class="btn btn-outline">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('land');return false">Try the live demo &#8593;</a><a href="#" class="btn btn-outline">Ask a Question</a></div>
     </div></section>
   </div>
 
@@ -970,7 +941,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Commercial Real Estate</span>
       <h1>Portfolio health at a glance.<br>Deal intelligence on demand.</h1>
       <p>Portfolio deal health, NOI anomaly detection, cap rate modeling, and site plan underwriting — across all your centers, with full audit trails and local-model privacy for sensitive documents.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -1001,7 +972,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="result-item"><span class="result-chk">✓</span><p>Underwrite acquisitions with consistent, documented methodology</p></div>
         <div class="result-item"><span class="result-chk">✓</span><p>Defensible audit trail for every investment decision</p></div>
       </div>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Ask a Question</a></div>
     </div></section>
   </div>
 
@@ -1011,7 +982,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Homes</span>
       <h1>Build the right spec, in the right community, right now.</h1>
       <p>StrataAI gives homebuilders competitive market intelligence, deal underwriting support, and option performance analysis — so every land and product decision is backed by your actual sales data, not instinct.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('homebuilder');return false">Run a live spec recommendation &#8595;</a><a href="#" class="btn btn-outline-lt">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('homebuilder');return false">Run a live spec recommendation &#8595;</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -1078,7 +1049,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="result-item"><span class="result-chk">✓</span><p>Optimize your option packages with performance data behind every decision</p></div>
         <div class="result-item"><span class="result-chk">✓</span><p>Underwrite acquisitions with documented, consistent methodology</p></div>
       </div>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('homebuilder');return false">Try the live demo &#8593;</a><a href="#" class="btn btn-outline">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('homebuilder');return false">Try the live demo &#8593;</a><a href="#" class="btn btn-outline">Ask a Question</a></div>
     </div></section>
   </div>
 
@@ -1088,7 +1059,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Medical Billing</span>
       <h1>Clinical intelligence, not clerical work.<br>Accurate. Documented. Every time.</h1>
       <p>StrataAI gives healthcare organizations governed workflows for clinical documentation, care coordination, prior authorization preparation, and patient intake analysis — structured, traceable, and consistent across your entire team.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -1119,7 +1090,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="result-item"><span class="result-chk">✓</span><p>Risk factors and care gaps surfaced at intake — not after the visit</p></div>
         <div class="result-item"><span class="result-chk">✓</span><p>Traceable care coordination with a documented handoff trail at every transition</p></div>
       </div>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Ask a Question</a></div>
     </div></section>
   </div>
 
@@ -1129,7 +1100,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Legal</span>
       <h1>From research to ready.<br>In hours, not days.</h1>
       <p>Case research, trial preparation, deposition prep, contract drafting, and matter summaries — structured, source-cited, and consistent quality across every attorney and every matter. Institutional knowledge that stays in the firm.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -1160,7 +1131,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="result-item"><span class="result-chk">✓</span><p>Contract quality standardized across your entire practice</p></div>
         <div class="result-item"><span class="result-chk">✓</span><p>Institutional matter knowledge stays in the firm when attorneys move on</p></div>
       </div>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Ask a Question</a></div>
     </div></section>
   </div>
 
@@ -1170,7 +1141,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Heavy Civil Contracting</span>
       <h1>Win more bids. Detect leakage early.<br>Finish with the margin you priced.</h1>
       <p>From ITB to closeout — bid ingestion, scope extraction, sub comparison, and a seven-detector profit scan that finds leakage while there's still time to act on it.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -1201,7 +1172,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="result-item"><span class="result-chk">✓</span><p>Detect profit leakage early across all seven risk categories</p></div>
         <div class="result-item"><span class="result-chk">✓</span><p>Compliance documentation current throughout the project lifecycle</p></div>
       </div>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Ask a Question</a></div>
     </div></section>
   </div>
 
@@ -1211,7 +1182,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Oil &amp; Gas</span>
       <h1>Find what's suspended.<br>Before someone else does.</h1>
       <p>Regulatory status intelligence, suspended well detection, and lease obligation tracking — across every well, every jurisdiction, before a violation becomes a liability.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -1242,7 +1213,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="result-item"><span class="result-chk">✓</span><p>Audit-ready compliance reports generated automatically from your source records</p></div>
         <div class="result-item"><span class="result-chk">✓</span><p>Identify remediation priorities ranked by risk, cost, and regulatory exposure</p></div>
       </div>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Talk to our team</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline">Ask a Question</a></div>
     </div></section>
   </div>
 
@@ -1265,7 +1236,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
     <span class="label lt">How StrataAI Works</span>
     <h1>Select. Upload. Deliver.</h1>
     <p>No prompt engineering. No blank canvas. No training sprint. Choose your industry, select a workflow from the pre-built library, provide your document — and receive a structured, source-cited, branded deliverable.</p>
-    <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Talk to our team</a></div>
+    <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Get Started</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
   </div></div>
 
   <section><div class="section-inner">
@@ -1286,7 +1257,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
     <p>No configuration sprint, no prompt setup, no blank canvas. Select your industry and be productive in under 60 seconds.</p>
     <div class="btn-group" style="justify-content:center">
       <a href="#" class="btn btn-white btn-lg">Get Started</a>
-      <a href="#" class="btn btn-outline-lt btn-lg">Talk to our team</a>
+      <a href="#" class="btn btn-outline-lt btn-lg">Ask a Question</a>
     </div>
   </div>
 
@@ -1330,7 +1301,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
     <p>Stop assembling compliance records retroactively. With StrataAI, your audit trail is complete before the project closes.</p>
     <div class="btn-group" style="justify-content:center">
       <a href="#" class="btn btn-white btn-lg">Get Started</a>
-      <a href="#" class="btn btn-outline-lt btn-lg">Talk to our team</a>
+      <a href="#" class="btn btn-outline-lt btn-lg">Ask a Question</a>
     </div>
   </div>
 
@@ -1437,106 +1408,13 @@ function showDemoFrame(v) {
   } catch(err) {}
 })();
 
-/* ── Contact Modal ─────────────────────────────────────── */
-function showContactModal() {
-  document.getElementById('contactModalOverlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeContactModal() {
-  document.getElementById('contactModalOverlay').classList.remove('active');
-  document.body.style.overflow = '';
-  document.getElementById('cm-form-body').style.display = 'block';
-  document.getElementById('cm-success').style.display = 'none';
-  document.getElementById('cm-error').style.display = 'none';
-  var btn = document.getElementById('cm-submit-btn');
-  if (btn) { btn.disabled = false; btn.textContent = 'Send message →'; }
-}
-
-function submitContactModal(e) {
-  e.preventDefault();
-  var btn = document.getElementById('cm-submit-btn');
-  var errEl = document.getElementById('cm-error');
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
-  errEl.style.display = 'none';
-
-  var fields = [
-    { name: 'firstname', value: document.getElementById('cm-first').value.trim() },
-    { name: 'lastname',  value: document.getElementById('cm-last').value.trim() },
-    { name: 'email',     value: document.getElementById('cm-email').value.trim() },
-    { name: 'company',   value: document.getElementById('cm-company').value.trim() }
-  ];
-  var phone = document.getElementById('cm-phone').value.trim();
-  if (phone) fields.push({ name: 'phone', value: phone });
-  var msg = document.getElementById('cm-message').value.trim();
-  if (msg) fields.push({ name: 'message', value: msg });
-
-  fetch('https://api.hsforms.com/submissions/v3/integration/submit/245235481/2bad8e23-009f-46d2-9725-662d3a194907', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      fields: fields,
-      context: { pageUri: window.location.href, pageName: document.title }
-    })
-  })
-  .then(function(res) {
-    if (!res.ok) throw new Error('submit failed');
-    document.getElementById('cm-form-body').style.display = 'none';
-    document.getElementById('cm-success').style.display = 'block';
-  })
-  .catch(function() {
-    errEl.textContent = 'Something went wrong — please email hello@spec-technology.com directly.';
-    errEl.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = 'Send message →';
-  });
-}
-
-// Wire every "Talk to our team" link to the contact modal
+// Wire every "Ask a Question" link to the support email
 document.querySelectorAll('a').forEach(function(a) {
-  if (a.textContent.trim() === 'Talk to our team') {
-    a.href = '#';
-    a.onclick = function(e) { e.preventDefault(); showContactModal(); return false; };
+  if (a.textContent.trim() === 'Ask a Question') {
+    a.href = 'mailto:support@spec-technology.com';
   }
-});
-
-// Close modal on Escape key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeContactModal();
 });
 </script>
 
-<!-- ── Contact Modal ─────────────────────────────────────────── -->
-<div class="contact-modal-overlay" id="contactModalOverlay" onclick="if(event.target===this)closeContactModal()">
-  <div class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="cm-heading">
-    <button class="contact-modal-close" onclick="closeContactModal()" aria-label="Close">&times;</button>
-
-    <div id="cm-form-body">
-      <h3 id="cm-heading">Talk to our team</h3>
-      <p class="cm-sub">Tell us about your use case and we&rsquo;ll follow up within one business day.</p>
-      <form onsubmit="submitContactModal(event)">
-        <div class="gate-row">
-          <input class="gate-input" type="text" id="cm-first" placeholder="First name" required>
-          <input class="gate-input" type="text" id="cm-last" placeholder="Last name" required>
-        </div>
-        <input class="gate-input" type="email" id="cm-email" placeholder="Work email" required>
-        <input class="gate-input" type="text" id="cm-company" placeholder="Company" required>
-        <input class="gate-input" type="tel" id="cm-phone" placeholder="Phone (optional)">
-        <textarea class="gate-input cm-textarea" id="cm-message" placeholder="What workflows are you looking for? (optional)"></textarea>
-        <p id="cm-error" class="cm-error"></p>
-        <button type="submit" class="btn btn-primary btn-lg" id="cm-submit-btn" style="width:100%;justify-content:center;margin-top:4px">Send message &rarr;</button>
-        <p class="gate-note">We&rsquo;ll never share your information with third parties.</p>
-      </form>
-    </div>
-
-    <div id="cm-success" class="cm-success" style="display:none">
-      <div class="cm-check">&#10003;</div>
-      <h3>Message received.</h3>
-      <p>We&rsquo;ll follow up within one business day. Looking forward to connecting.</p>
-      <button class="btn btn-outline-lt" style="margin-top:20px" onclick="closeContactModal()">Close</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
