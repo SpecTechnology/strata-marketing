@@ -473,6 +473,35 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
 @media (max-width: 560px) {
   .demo-frame-bar { flex-wrap: wrap; gap: 10px; }
 }
+
+/* ── Contact Modal ─────────────────────────────────────── */
+.contact-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(3px);
+  align-items: center; justify-content: center;
+}
+.contact-modal-overlay.active { display: flex; }
+.contact-modal {
+  background: #0f2340; border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 16px; padding: 36px 36px 28px; width: 100%; max-width: 480px;
+  margin: 16px; position: relative; box-shadow: 0 28px 72px rgba(0,0,0,0.6);
+}
+.contact-modal-close {
+  position: absolute; top: 14px; right: 16px; background: none; border: none;
+  cursor: pointer; color: rgba(255,255,255,0.4); font-size: 26px; line-height: 1;
+  transition: color 150ms; padding: 4px 6px;
+}
+.contact-modal-close:hover { color: rgba(255,255,255,0.85); }
+.contact-modal h3 { color: #fff; font-size: 22px; margin: 0 0 8px; }
+.contact-modal .cm-sub { color: rgba(255,255,255,0.52); font-size: 14px; margin-bottom: 22px; line-height: 1.6; }
+.contact-modal .gate-input { margin-bottom: 10px; }
+.cm-error { color: #f87171; font-size: 13px; margin-bottom: 8px; display: none; }
+.cm-success { text-align: center; padding: 28px 0 12px; }
+.cm-success .cm-check { font-size: 44px; margin-bottom: 14px; }
+.cm-success h3 { color: #fff; font-size: 20px; margin-bottom: 8px; }
+.cm-success p { color: rgba(255,255,255,0.52); font-size: 15px; line-height: 1.6; }
+.cm-textarea { width: 100%; box-sizing: border-box; resize: vertical; min-height: 80px;
+  font-family: inherit; font-size: 15px; }
 </style>
 </head>
 <body>
@@ -1407,6 +1436,107 @@ function showDemoFrame(v) {
     }
   } catch(err) {}
 })();
+
+/* ── Contact Modal ─────────────────────────────────────── */
+function showContactModal() {
+  document.getElementById('contactModalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeContactModal() {
+  document.getElementById('contactModalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+  document.getElementById('cm-form-body').style.display = 'block';
+  document.getElementById('cm-success').style.display = 'none';
+  document.getElementById('cm-error').style.display = 'none';
+  var btn = document.getElementById('cm-submit-btn');
+  if (btn) { btn.disabled = false; btn.textContent = 'Send message →'; }
+}
+
+function submitContactModal(e) {
+  e.preventDefault();
+  var btn = document.getElementById('cm-submit-btn');
+  var errEl = document.getElementById('cm-error');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  errEl.style.display = 'none';
+
+  var fields = [
+    { name: 'firstname', value: document.getElementById('cm-first').value.trim() },
+    { name: 'lastname',  value: document.getElementById('cm-last').value.trim() },
+    { name: 'email',     value: document.getElementById('cm-email').value.trim() },
+    { name: 'company',   value: document.getElementById('cm-company').value.trim() }
+  ];
+  var phone = document.getElementById('cm-phone').value.trim();
+  if (phone) fields.push({ name: 'phone', value: phone });
+  var msg = document.getElementById('cm-message').value.trim();
+  if (msg) fields.push({ name: 'message', value: msg });
+
+  fetch('https://api.hsforms.com/submissions/v3/integration/submit/245235481/ccba3db8-858b-4598-b7bc-f1702df04be5', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      fields: fields,
+      context: { pageUri: window.location.href, pageName: document.title }
+    })
+  })
+  .then(function(res) {
+    if (!res.ok) throw new Error('submit failed');
+    document.getElementById('cm-form-body').style.display = 'none';
+    document.getElementById('cm-success').style.display = 'block';
+  })
+  .catch(function() {
+    errEl.textContent = 'Something went wrong — please email hello@spec-technology.com directly.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Send message →';
+  });
+}
+
+// Wire every "Talk to our team" link to the contact modal
+document.querySelectorAll('a').forEach(function(a) {
+  if (a.textContent.trim() === 'Talk to our team') {
+    a.href = '#';
+    a.onclick = function(e) { e.preventDefault(); showContactModal(); return false; };
+  }
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeContactModal();
+});
 </script>
+
+<!-- ── Contact Modal ─────────────────────────────────────────── -->
+<div class="contact-modal-overlay" id="contactModalOverlay" onclick="if(event.target===this)closeContactModal()">
+  <div class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="cm-heading">
+    <button class="contact-modal-close" onclick="closeContactModal()" aria-label="Close">&times;</button>
+
+    <div id="cm-form-body">
+      <h3 id="cm-heading">Talk to our team</h3>
+      <p class="cm-sub">Tell us about your use case and we&rsquo;ll follow up within one business day.</p>
+      <form onsubmit="submitContactModal(event)">
+        <div class="gate-row">
+          <input class="gate-input" type="text" id="cm-first" placeholder="First name" required>
+          <input class="gate-input" type="text" id="cm-last" placeholder="Last name" required>
+        </div>
+        <input class="gate-input" type="email" id="cm-email" placeholder="Work email" required>
+        <input class="gate-input" type="text" id="cm-company" placeholder="Company" required>
+        <input class="gate-input" type="tel" id="cm-phone" placeholder="Phone (optional)">
+        <textarea class="gate-input cm-textarea" id="cm-message" placeholder="What workflows are you looking for? (optional)"></textarea>
+        <p id="cm-error" class="cm-error"></p>
+        <button type="submit" class="btn btn-primary btn-lg" id="cm-submit-btn" style="width:100%;justify-content:center;margin-top:4px">Send message &rarr;</button>
+        <p class="gate-note">We&rsquo;ll never share your information with third parties.</p>
+      </form>
+    </div>
+
+    <div id="cm-success" class="cm-success" style="display:none">
+      <div class="cm-check">&#10003;</div>
+      <h3>Message received.</h3>
+      <p>We&rsquo;ll follow up within one business day. Looking forward to connecting.</p>
+      <button class="btn btn-outline-lt" style="margin-top:20px" onclick="closeContactModal()">Close</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
