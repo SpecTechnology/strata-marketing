@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Demo — StrataAI by SpecTech</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* ─── StrataAI Brand Tokens ─── */
+  :root {
+    --primary:      #1B365D;
+    --primary-dark: #0F2240;
+    --primary-lt:   #2A4A7A;
+    --secondary:    #4AABA8;
+    --secondary-lt: #5CC0BD;
+    --dark:         #2D3748;
+    --dark-60:      rgba(45,55,72,0.6);
+    --dark-30:      rgba(45,55,72,0.3);
+    --light:        #F7F9FC;
+    --white:        #ffffff;
+    --border:       #dce4ee;
+    --border-focus: #4AABA8;
+    --error:        #c62828;
+    --input-bg:     #ffffff;
+    --teal:         #4AABA8;
+    --teal-2:       #5CC0BD;
+    --gold:         #D4982A;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    background: var(--white);
+    height: 68px;
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--primary);
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 8px rgba(27,54,93,0.08);
+  }
+  .nav-logo img { height: 40px; width: auto; display: block; }
+  .nav-back {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--secondary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.3px;
+    transition: color 0.15s;
+  }
+  .nav-back:hover { color: var(--primary); }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--primary);
+    padding: 60px 48px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  /* VIS-style: accent rule at bottom */
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 5px;
+    background: var(--secondary);
+  }
+  /* Subtle background texture using primary geometry */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border: 40px solid rgba(255,255,255,0.04);
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+  .hero > * { position: relative; }
+
+  /* PRE-HEADER (H4) style — Montserrat light, secondary */
+  .hero-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 16px;
+    display: block;
+  }
+  /* TITLE style — Montserrat bold, white on dark */
+  .hero h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: clamp(30px, 4.5vw, 46px);
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+  /* CALLOUT style — Montserrat semibold italic, secondary */
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+  }
+  /* BODY — Source Sans Pro */
+  .hero p {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  /* ─── PROGRESS ─── */
+  .progress-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 48px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .progress-track {
+    display: flex;
+    align-items: center;
+    max-width: 420px;
+    width: 100%;
+  }
+  .step-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    flex: 1;
+  }
+  .step-circle {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dark-30);
+    transition: all 0.25s;
+    position: relative; z-index: 1;
+  }
+  .step-circle.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--white);
+    box-shadow: 0 0 0 5px rgba(27,54,93,0.12);
+  }
+  .step-circle.done {
+    border-color: var(--secondary);
+    background: var(--secondary);
+    color: var(--white);
+  }
+  /* PRE-HEADER style for step labels */
+  .step-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--dark-30);
+    white-space: nowrap;
+  }
+  .step-label.active { color: var(--primary); font-weight: 600; }
+  .step-label.done   { color: var(--secondary); }
+  .step-connector {
+    flex: 1; height: 2px;
+    background: var(--border);
+    margin-bottom: 21px;
+    transition: background 0.25s;
+  }
+  .step-connector.done { background: var(--secondary); }
+
+  /* ─── PAGE BODY ─── */
+  .page-body {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px 80px;
+  }
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    box-shadow: 0 4px 24px rgba(27,54,93,0.08);
+    width: 100%;
+    max-width: 640px;
+    border-top: 4px solid var(--primary);
+  }
+
+  /* ─── PANELS ─── */
+  .step-panel { display: none; animation: panelIn 0.2s ease; }
+  .step-panel.active { display: block; }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── PANEL HEADER — VIS section style ─── */
+  .panel-header {
+    padding: 32px 44px 0;
+  }
+  /* CALLOUT (H3) style — Montserrat semibold, secondary */
+  .panel-step-tag {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 6px;
+    display: block;
+  }
+  /* HEADLINE (H1) — Montserrat semibold, dark */
+  .panel-header h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 26px;
+    color: var(--dark);
+    line-height: 1.15;
+    margin-bottom: 0;
+  }
+  /* VIS section rule — full-width secondary blue bar */
+  .section-rule {
+    height: 3px;
+    background: var(--secondary);
+    margin: 10px 0 16px;
+  }
+  /* BODY — Source Sans Pro */
+  .panel-header p {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 16px;
+    color: var(--dark-60);
+    line-height: 1.6;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+
+  /* ─── PANEL BODY ─── */
+  .panel-body { padding: 28px 44px 32px; }
+
+  /* ─── FIELDS ─── */
+  .field-row { display: grid; gap: 18px; margin-bottom: 22px; }
+  .field-row.two { grid-template-columns: 1fr 1fr; }
+  .field-row.one { grid-template-columns: 1fr; }
+
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+
+  /* PRE-HEADER (H4) — Montserrat light, secondary for labels */
+  .field-group label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+  .field-group input,
+  .field-group select,
+  .field-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--dark);
+    background: var(--input-bg);
+    transition: border-color 0.18s, box-shadow 0.18s;
+    appearance: none; -webkit-appearance: none;
+  }
+  .field-group input::placeholder,
+  .field-group textarea::placeholder { color: var(--dark-30); }
+  .field-group input:focus,
+  .field-group select:focus,
+  .field-group textarea:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(27,54,93,0.12);
+  }
+  .field-group input.error,
+  .field-group select.error { border-color: var(--error); }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '';
+    position: absolute; right: 13px; top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--dark-60);
+    pointer-events: none;
+  }
+
+  .field-error {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    color: var(--error);
+    display: none;
+  }
+  .field-error.show { display: block; }
+
+  /* ─── SECTION DIVIDER — VIS style ─── */
+  /* SUBHEADLINE (H2) — Montserrat regular, dark, with blue rule */
+  .vis-section {
+    margin: 28px 0 20px;
+  }
+  .vis-section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .vis-section-rule {
+    height: 3px;
+    background: var(--secondary);
+    margin-bottom: 16px;
+  }
+
+  /* ─── TILE CARDS ─── */
+  .tile-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--dark);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .tile-grid { display: grid; gap: 10px; margin-bottom: 20px; }
+  .tile-grid.c2 { grid-template-columns: 1fr 1fr; }
+  .tile-grid.c3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .tile { position: relative; cursor: pointer; }
+  .tile input[type="radio"],
+  .tile input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+
+  .tile-inner {
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 13px 15px;
+    background: var(--white);
+    transition: all 0.15s ease;
+  }
+  /* Montserrat semibold for tile primary text */
+  .tile-main {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark);
+    line-height: 1.3;
+  }
+  /* Source Sans Pro for sub text */
+  .tile-sub {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--dark-60);
+    margin-top: 3px;
+    line-height: 1.35;
+  }
+
+  .tile input:checked + .tile-inner {
+    border-color: var(--primary);
+    border-left: 4px solid var(--primary);
+    background: #EEF2F7;
+  }
+  .tile input:checked + .tile-inner .tile-main { color: var(--primary); }
+  .tile:hover .tile-inner { border-color: var(--secondary); }
+  .field-error.tile-error { margin-top: -12px; margin-bottom: 14px; }
+
+  /* ─── NOTICE BOX ─── */
+  .notice-box {
+    display: none;
+    background: #fffbeb;
+    border-left: 4px solid var(--gold);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    color: #5a3e00;
+    line-height: 1.6;
+    border-radius: 0 4px 4px 0;
+  }
+  .notice-box.show { display: block; }
+  .notice-box strong {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: #7a5200;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ─── FORM FOOTER ─── */
+  .form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 44px 24px;
+    background: var(--light);
+    border-top: 1px solid var(--border);
+  }
+
+  /* Montserrat bold for buttons — VIS CTAs */
+  .btn {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 11px 28px;
+    transition: all 0.18s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--dark-60);
+    border: 1.5px solid var(--border);
+    visibility: hidden;
+  }
+  .btn-ghost.show { visibility: visible; }
+  .btn-ghost:hover { border-color: var(--dark); color: var(--dark); }
+
+  .btn-next {
+    background: var(--primary);
+    color: var(--white);
+  }
+  .btn-next:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(27,54,93,0.28);
+  }
+  .btn-submit {
+    background: var(--secondary);
+    color: var(--white);
+  }
+  .btn-submit:hover {
+    background: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(27,54,93,0.3);
+  }
+
+  /* ─── TRUST STRIP ─── */
+  .trust-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 18px 44px;
+    background: var(--light);
+    border-top: 1px solid var(--border);
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    color: var(--dark-60);
+  }
+  .trust-check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .trust-check svg { width: 10px; height: 10px; }
+
+  /* ─── SUCCESS ─── */
+  #success-panel { display: none; padding: 56px 44px 44px; text-align: center; }
+  #success-panel.show { display: block; }
+
+  .success-icon {
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+  }
+  .success-icon svg { width: 28px; height: 28px; }
+
+  /* HEADLINE (H1) for success */
+  #success-panel h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    color: var(--dark);
+    margin-bottom: 12px;
+  }
+  #success-panel > p {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 16px;
+    color: var(--dark-60);
+    max-width: 440px;
+    margin: 0 auto 28px;
+    line-height: 1.65;
+  }
+  .next-steps {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--secondary);
+    padding: 24px 28px;
+    text-align: left;
+  }
+  /* CALLOUT (H3) — Montserrat semibold, secondary */
+  .next-steps h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 16px;
+  }
+  .ns-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    color: var(--dark-60);
+    line-height: 1.55;
+  }
+  .ns-item:last-child { margin-bottom: 0; }
+  .ns-num {
+    min-width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--white);
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    nav { padding: 0 20px; }
+    .hero { padding: 40px 20px 36px; }
+    .progress-wrap { padding: 18px 20px 16px; }
+    .page-body { padding: 24px 12px 60px; }
+    .panel-header { padding: 24px 20px 0; }
+    .panel-body { padding: 20px 20px 24px; }
+    .form-footer, .trust-strip { padding-left: 20px; padding-right: 20px; }
+    .field-row.two { grid-template-columns: 1fr; }
+    .tile-grid.c2, .tile-grid.c3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="data:image/jpeg;base64,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" alt="StrataAI by SpecTech" />
+  </div>
+  <a href="https://strata.spectechai.com" class="nav-back" onclick="window.parent.postMessage('closeBookDemo','*');return false">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to site
+  </a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-eyebrow">Workflow Assessment</span>
+  <h1>See StrataAI in <em>your</em> workflow.</h1>
+  <p>Tell us about your team and the process you want to improve. We will confirm whether it is a strong AI candidate and come to your demo prepared.</p>
+</section>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-track">
+    <div class="step-node">
+      <div class="step-circle active" id="node-1">1</div>
+      <div class="step-label active" id="lbl-1">Contact</div>
+    </div>
+    <div class="step-connector" id="conn-1"></div>
+    <div class="step-node">
+      <div class="step-circle" id="node-2">2</div>
+      <div class="step-label" id="lbl-2">Your Work</div>
+    </div>
+    <div class="step-connector" id="conn-2"></div>
+    <div class="step-node">
+      <div class="step-circle" id="node-3">3</div>
+      <div class="step-label" id="lbl-3">Fit Check</div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<main class="page-body">
+<div class="form-card">
+
+  <!-- ════ STEP 1 ════ -->
+  <div class="step-panel active" id="step-1">
+    <div class="panel-header">
+      <span class="panel-step-tag">Step 1 of 3</span>
+      <h2>Let's start with you.</h2>
+      <div class="section-rule"></div>
+      <p>Basic contact information so we can match you to the right demo and team member.</p>
+    </div>
+    <div class="panel-body">
+
+      <div class="field-row two">
+        <div class="field-group">
+          <label>First Name</label>
+          <input type="text" id="first_name" placeholder="Jane" autocomplete="given-name">
+          <span class="field-error" id="e-first_name">Please enter your first name.</span>
+        </div>
+        <div class="field-group">
+          <label>Last Name</label>
+          <input type="text" id="last_name" placeholder="Smith" autocomplete="family-name">
+          <span class="field-error" id="e-last_name">Please enter your last name.</span>
+        </div>
+      </div>
+
+      <div class="field-row two">
+        <div class="field-group">
+          <label>Work Email</label>
+          <input type="email" id="email" placeholder="jane@company.com" autocomplete="email">
+          <span class="field-error" id="e-email">Please use a valid work email.</span>
+        </div>
+        <div class="field-group">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" placeholder="(555) 000-0000" autocomplete="tel">
+          <span class="field-error" id="e-phone">Please enter your phone number.</span>
+        </div>
+      </div>
+
+      <div class="field-row two">
+        <div class="field-group">
+          <label>Company Name</label>
+          <input type="text" id="company" placeholder="Acme Corp" autocomplete="organization">
+          <span class="field-error" id="e-company">Please enter your company name.</span>
+        </div>
+        <div class="field-group">
+          <label>Your Role / Title</label>
+          <input type="text" id="title" placeholder="VP of Operations" autocomplete="organization-title">
+          <span class="field-error" id="e-title">Please enter your title.</span>
+        </div>
+      </div>
+
+      <div class="field-row two">
+        <div class="field-group">
+          <label>Industry</label>
+          <div class="select-wrap">
+            <select id="industry">
+              <option value="" disabled selected>Select your industry</option>
+              <option value="land_dev">Land Development / Home Building</option>
+              <option value="civil_eng">Civil Engineering / Infrastructure</option>
+              <option value="cre">Commercial Real Estate</option>
+              <option value="homes">Homebuilding / Production Building</option>
+              <option value="contracting">Heavy Civil Contracting</option>
+              <option value="oil_gas">Oil &amp; Gas / Energy</option>
+              <option value="healthcare">Healthcare / Medical Billing</option>
+              <option value="legal">Legal Services</option>
+              <option value="hoa">HOA / Property Management</option>
+              <option value="finance">Finance / Accounting</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <span class="field-error" id="e-industry">Please select your industry.</span>
+        </div>
+        <div class="field-group">
+          <label>Company Size</label>
+          <div class="select-wrap">
+            <select id="company_size">
+              <option value="" disabled selected>Number of employees</option>
+              <option value="1_25">1–25</option>
+              <option value="26_100">26–100</option>
+              <option value="101_500">101–500</option>
+              <option value="501_1000">501–1,000</option>
+              <option value="1000_plus">1,000+</option>
+            </select>
+          </div>
+          <span class="field-error" id="e-company_size">Please select company size.</span>
+        </div>
+      </div>
+
+      <div class="vis-section">
+        <div class="vis-section-label">Why You Are Here</div>
+        <div class="vis-section-rule"></div>
+      </div>
+
+      <span class="tile-label">What best describes your reason for booking?</span>
+      <div class="tile-grid c2">
+        <label class="tile"><input type="radio" name="interest" value="specific_workflow">
+          <div class="tile-inner"><div class="tile-main">I have a specific workflow to automate</div><div class="tile-sub">I know what I want to improve</div></div></label>
+        <label class="tile"><input type="radio" name="interest" value="learn_product">
+          <div class="tile-inner"><div class="tile-main">I want to understand StrataAI</div><div class="tile-sub">Exploring what it does for my industry</div></div></label>
+        <label class="tile"><input type="radio" name="interest" value="vendor_eval">
+          <div class="tile-inner"><div class="tile-main">Evaluating AI vendors</div><div class="tile-sub">Comparing options for my organization</div></div></label>
+        <label class="tile"><input type="radio" name="interest" value="referral">
+          <div class="tile-inner"><div class="tile-main">A colleague referred me</div><div class="tile-sub">Someone suggested I reach out</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-interest">Please select one option.</span>
+
+    </div>
+  </div>
+
+  <!-- ════ STEP 2 ════ -->
+  <div class="step-panel" id="step-2">
+    <div class="panel-header">
+      <span class="panel-step-tag">Step 2 of 3</span>
+      <h2>Tell us about your work.</h2>
+      <div class="section-rule"></div>
+      <p>These questions help us identify your best workflow candidate and come to your demo prepared.</p>
+    </div>
+    <div class="panel-body">
+
+      <div class="field-row one">
+        <div class="field-group">
+          <label>What process or workflow do you want to improve?</label>
+          <input type="text" id="workflow_desc" placeholder="e.g. MUD document review, permit research, contract summarization...">
+          <span class="field-error" id="e-workflow_desc">Please describe the workflow.</span>
+        </div>
+      </div>
+
+      <span class="tile-label">How often does this process happen?</span>
+      <div class="tile-grid c3">
+        <label class="tile"><input type="radio" name="frequency" value="daily" data-score="5">
+          <div class="tile-inner"><div class="tile-main">Daily or more</div></div></label>
+        <label class="tile"><input type="radio" name="frequency" value="weekly" data-score="4">
+          <div class="tile-inner"><div class="tile-main">A few times a week</div></div></label>
+        <label class="tile"><input type="radio" name="frequency" value="monthly" data-score="2">
+          <div class="tile-inner"><div class="tile-main">Weekly or monthly</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-frequency">Please select one option.</span>
+
+      <span class="tile-label">How long does one occurrence typically take?</span>
+      <div class="tile-grid c3">
+        <label class="tile"><input type="radio" name="time_burden" value="under_30" data-score="1">
+          <div class="tile-inner"><div class="tile-main">Under 30 minutes</div></div></label>
+        <label class="tile"><input type="radio" name="time_burden" value="30_2h" data-score="3">
+          <div class="tile-inner"><div class="tile-main">30 minutes to 2 hours</div></div></label>
+        <label class="tile"><input type="radio" name="time_burden" value="over_2h" data-score="5">
+          <div class="tile-inner"><div class="tile-main">2 or more hours</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-time_burden">Please select one option.</span>
+
+      <span class="tile-label">How much is this slowing your team down?</span>
+      <div class="tile-grid c3">
+        <label class="tile"><input type="radio" name="pain_level" value="low" data-score="1">
+          <div class="tile-inner"><div class="tile-main">Minor annoyance</div></div></label>
+        <label class="tile"><input type="radio" name="pain_level" value="medium" data-score="3">
+          <div class="tile-inner"><div class="tile-main">Real bottleneck</div></div></label>
+        <label class="tile"><input type="radio" name="pain_level" value="high" data-score="5">
+          <div class="tile-inner"><div class="tile-main">Executive-level problem</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-pain_level">Please select one option.</span>
+
+      <div class="vis-section">
+        <div class="vis-section-label">Your AI Environment</div>
+        <div class="vis-section-rule"></div>
+      </div>
+
+      <span class="tile-label">Is your team currently using AI tools?</span>
+      <div class="tile-grid c2">
+        <label class="tile"><input type="radio" name="ai_usage" value="formal" data-score="3">
+          <div class="tile-inner"><div class="tile-main">Yes — formally approved</div><div class="tile-sub">Company policy is in place</div></div></label>
+        <label class="tile"><input type="radio" name="ai_usage" value="informal" data-score="5">
+          <div class="tile-inner"><div class="tile-main">Informally / individually</div><div class="tile-sub">People using it on their own</div></div></label>
+        <label class="tile"><input type="radio" name="ai_usage" value="no" data-score="2">
+          <div class="tile-inner"><div class="tile-main">Not yet</div><div class="tile-sub">No current AI usage</div></div></label>
+        <label class="tile"><input type="radio" name="ai_usage" value="unsure" data-score="2">
+          <div class="tile-inner"><div class="tile-main">Not sure</div><div class="tile-sub">Hard to track across the team</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-ai_usage">Please select one option.</span>
+
+      <span class="tile-label">Are the documents or data involved accessible and reasonably organized?</span>
+      <div class="tile-grid c3">
+        <label class="tile"><input type="radio" name="data_readiness" value="yes" data-score="5">
+          <div class="tile-inner"><div class="tile-main">Yes — accessible</div></div></label>
+        <label class="tile"><input type="radio" name="data_readiness" value="partial" data-score="3">
+          <div class="tile-inner"><div class="tile-main">Partially / inconsistent</div></div></label>
+        <label class="tile"><input type="radio" name="data_readiness" value="no" data-score="1">
+          <div class="tile-inner"><div class="tile-main">Scattered or unclear</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-data_readiness">Please select one option.</span>
+
+    </div>
+  </div>
+
+  <!-- ════ STEP 3 ════ -->
+  <div class="step-panel" id="step-3">
+    <div class="panel-header">
+      <span class="panel-step-tag">Step 3 of 3</span>
+      <h2>Almost done.</h2>
+      <div class="section-rule"></div>
+      <p>A few last questions so our team can come to your demo with the right people and the right scope.</p>
+    </div>
+    <div class="panel-body">
+
+      <span class="tile-label">What is your role in a decision like this?</span>
+      <div class="tile-grid c2">
+        <label class="tile"><input type="radio" name="authority" value="decision_maker" data-score="5">
+          <div class="tile-inner"><div class="tile-main">I can approve this</div><div class="tile-sub">Decision-maker or owner</div></div></label>
+        <label class="tile"><input type="radio" name="authority" value="champion" data-score="4">
+          <div class="tile-inner"><div class="tile-main">Championing it internally</div><div class="tile-sub">Others will also need to approve</div></div></label>
+        <label class="tile"><input type="radio" name="authority" value="influencer" data-score="3">
+          <div class="tile-inner"><div class="tile-main">Recommending to leadership</div><div class="tile-sub">Not the final call</div></div></label>
+        <label class="tile"><input type="radio" name="authority" value="researcher" data-score="1">
+          <div class="tile-inner"><div class="tile-main">Researching for now</div><div class="tile-sub">No active decision process yet</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-authority">Please select one option.</span>
+
+      <span class="tile-label">Do you have budget set aside for AI workflow tooling?</span>
+      <div class="tile-grid c3">
+        <label class="tile"><input type="radio" name="budget" value="yes" data-score="5">
+          <div class="tile-inner"><div class="tile-main">Yes — allocated</div></div></label>
+        <label class="tile"><input type="radio" name="budget" value="possible" data-score="3">
+          <div class="tile-inner"><div class="tile-main">Possibly / exploratory</div></div></label>
+        <label class="tile"><input type="radio" name="budget" value="no" data-score="1">
+          <div class="tile-inner"><div class="tile-main">Just looking for now</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-budget">Please select one option.</span>
+
+      <span class="tile-label">When would you like to get started?</span>
+      <div class="tile-grid c3">
+        <label class="tile"><input type="radio" name="timeline" value="now" data-score="5">
+          <div class="tile-inner"><div class="tile-main">ASAP — this month</div></div></label>
+        <label class="tile"><input type="radio" name="timeline" value="quarter" data-score="3">
+          <div class="tile-inner"><div class="tile-main">This quarter</div></div></label>
+        <label class="tile"><input type="radio" name="timeline" value="exploring" data-score="1">
+          <div class="tile-inner"><div class="tile-main">Just exploring</div></div></label>
+      </div>
+      <span class="field-error tile-error" id="e-timeline">Please select one option.</span>
+
+      <div class="vis-section">
+        <div class="vis-section-label">Industry Modules</div>
+        <div class="vis-section-rule"></div>
+      </div>
+
+      <span class="tile-label">Does your work involve any of the following? <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:13px;color:var(--dark-60)">(select all that apply)</span></span>
+      <div class="tile-grid c2">
+        <label class="tile"><input type="checkbox" name="modules" value="regsai">
+          <div class="tile-inner"><div class="tile-main">Houston-area regulatory research</div><div class="tile-sub">Harris, Montgomery, Fort Bend counties</div></div></label>
+        <label class="tile"><input type="checkbox" name="modules" value="mudsai">
+          <div class="tile-inner"><div class="tile-main">MUD districts / land development</div><div class="tile-sub">Board minutes, bond info, feasibility</div></div></label>
+        <label class="tile"><input type="checkbox" name="modules" value="docs">
+          <div class="tile-inner"><div class="tile-main">Document-heavy workflows</div><div class="tile-sub">Contracts, reports, PDFs, plan sets</div></div></label>
+        <label class="tile"><input type="checkbox" name="modules" value="none">
+          <div class="tile-inner"><div class="tile-main">None of the above</div><div class="tile-sub">General business workflow</div></div></label>
+      </div>
+
+      <div class="notice-box" id="disqualify-notice">
+        <strong>One thing to know before your demo</strong>
+        Based on your answers, a full workflow build may not be the right first step right now. A shorter conversation can still clarify the opportunity — our team will reach out to discuss next steps.
+      </div>
+
+      <div class="field-row two">
+        <div class="field-group">
+          <label>How did you hear about StrataAI?</label>
+          <div class="select-wrap">
+            <select id="source">
+              <option value="" disabled selected>Select one</option>
+              <option value="referral">Colleague / referral</option>
+              <option value="event">Industry event (GHBA, HBJ, etc.)</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="search">Google / web search</option>
+              <option value="partner">Partner or integration</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group"></div>
+      </div>
+
+      <div class="field-row one">
+        <div class="field-group">
+          <label>Anything else before your demo?</label>
+          <textarea id="notes" rows="3" placeholder="Share any context about your team, tech stack, or what success looks like..." style="resize:vertical"></textarea>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="success-panel">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>You are on the calendar.</h2>
+    <p>We received your request. A member of the StrataAI team will reach out within one business day to confirm your demo time and agenda.</p>
+    <div class="next-steps">
+      <h4>What Happens Next</h4>
+      <div class="ns-item"><div class="ns-num">1</div><span>Your rep reviews your responses and prepares a workflow-specific demo agenda — not a generic product tour.</span></div>
+      <div class="ns-item"><div class="ns-num">2</div><span>You will receive a calendar invite with a Zoom or in-person option within 24 hours.</span></div>
+      <div class="ns-item"><div class="ns-num">3</div><span>The demo runs 30 to 45 minutes and focuses entirely on your workflow and your industry.</span></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="form-footer" id="form-footer">
+    <button class="btn btn-ghost" id="btn-back" onclick="goBack()">Back</button>
+    <button class="btn btn-next" id="btn-next" onclick="goNext()">Continue</button>
+  </div>
+
+  <!-- TRUST -->
+  <div class="trust-strip" id="trust-strip">
+    <div class="trust-item">
+      <div class="trust-check"><svg viewBox="0 0 12 9" fill="none" stroke="white" stroke-width="2"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+      No spam. Ever.
+    </div>
+    <div class="trust-item">
+      <div class="trust-check"><svg viewBox="0 0 12 9" fill="none" stroke="white" stroke-width="2"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+      Response within 1 business day
+    </div>
+    <div class="trust-item">
+      <div class="trust-check"><svg viewBox="0 0 12 9" fill="none" stroke="white" stroke-width="2"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+      Dedicated rep assigned
+    </div>
+  </div>
+
+</div>
+</main>
+
+
+<script>
+  const PORTAL_ID  = '245235481';
+  const FORM_GUID  = '2bad8e23-009f-46d2-9725-662d3a194907';
+
+  let step=1; const STEPS=3;
+  const SCORES={
+    frequency:{daily:5,weekly:4,monthly:2},
+    time_burden:{under_30:1,'30_2h':3,over_2h:5},
+    pain_level:{low:1,medium:3,high:5},
+    ai_usage:{formal:3,informal:5,no:2,unsure:2},
+    data_readiness:{yes:5,partial:3,no:1},
+    authority:{decision_maker:5,champion:4,influencer:3,researcher:1},
+    budget:{yes:5,possible:3,no:1},
+    timeline:{now:5,quarter:3,exploring:1}
+  };
+  const PERSONAL=['gmail','yahoo','hotmail','outlook','icloud','aol','proton','me.com'];
+  const S1=['first_name','last_name','email','phone','company','title','industry','company_size'];
+  const S2r=['frequency','time_burden','pain_level','ai_usage','data_readiness'];
+  const S3r=['authority','budget','timeline'];
+
+  function calcScore(){return Object.entries(SCORES).reduce((s,[n,v])=>{const el=document.querySelector('[name="'+n+'"]:checked');return s+(el?(v[el.value]||0):0);},0);}
+  function routing(sc){
+    if(sc>=30)return{label:'Pilot Ready',action:'Move to full demo immediately.'};
+    if(sc>=20)return{label:'Possible Fit',action:'Schedule demo; set pilot scope expectations.'};
+    if(sc>=12)return{label:'Nurture',action:'Send one-pager. Follow up in 30 days.'};
+    return{label:'Defer / Diagnostic First',action:'Do not invest full demo time yet.'};
+  }
+  function clearErrors(){document.querySelectorAll('.field-error.show').forEach(e=>e.classList.remove('show'));document.querySelectorAll('input.error,select.error').forEach(e=>e.classList.remove('error'));}
+  function flagErr(id,msg){const e=document.getElementById('e-'+id);if(e){e.classList.add('show');if(msg)e.textContent=msg;}const i=document.getElementById(id);if(i)i.classList.add('error');}
+  function validate(s){
+    clearErrors();let ok=true;
+    if(s===1){
+      S1.forEach(id=>{if(!document.getElementById(id)?.value?.trim()){flagErr(id,null);ok=false;}});
+      const em=document.getElementById('email')?.value||'';
+      if(em&&PERSONAL.some(p=>em.split('@')[1]?.includes(p))){flagErr('email','Please use your work email address.');ok=false;}
+      if(!document.querySelector('[name="interest"]:checked')){flagErr('interest','Please select one option.');ok=false;}
+    }
+    if(s===2){
+      if(!document.getElementById('workflow_desc')?.value?.trim()){flagErr('workflow_desc',null);ok=false;}
+      S2r.forEach(n=>{if(!document.querySelector('[name="'+n+'"]:checked')){flagErr(n,'Please select one option.');ok=false;}});
+    }
+    if(s===3){S3r.forEach(n=>{if(!document.querySelector('[name="'+n+'"]:checked')){flagErr(n,'Please select one option.');ok=false;}});}
+    return ok;
+  }
+  function updateUI(){
+    for(let i=1;i<=STEPS;i++){
+      const nd=document.getElementById('node-'+i),lb=document.getElementById('lbl-'+i);
+      nd.className='step-circle'+(i<step?' done':i===step?' active':'');
+      lb.className='step-label'+(i<step?' done':i===step?' active':'');
+      nd.textContent=i<step?'✓':i;
+    }
+    for(let i=1;i<STEPS;i++)document.getElementById('conn-'+i)?.classList.toggle('done',i<step);
+    const back=document.getElementById('btn-back'),next=document.getElementById('btn-next');
+    back.classList.toggle('show',step>1);
+    if(step<STEPS){next.textContent='Continue';next.className='btn btn-next';}
+    else{next.textContent='Book My Demo';next.className='btn btn-submit';}
+  }
+  function checkDisqualify(){
+    const sc=calcScore(),auth=document.querySelector('[name="authority"]:checked')?.value,bud=document.querySelector('[name="budget"]:checked')?.value;
+    document.getElementById('disqualify-notice')?.classList.toggle('show',sc<20||auth==='researcher'||bud==='no');
+  }
+  function goNext(){
+    if(!validate(step))return;
+    if(step===STEPS){submitForm();return;}
+    document.getElementById('step-'+step).classList.remove('active');
+    step++;
+    document.getElementById('step-'+step).classList.add('active');
+    updateUI();
+    if(step===3)document.querySelectorAll('[name="authority"],[name="budget"],[name="timeline"]').forEach(el=>el.addEventListener('change',checkDisqualify));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function goBack(){
+    if(step===1)return;
+    document.getElementById('step-'+step).classList.remove('active');
+    step--;
+    document.getElementById('step-'+step).classList.add('active');
+    updateUI();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function collect(){
+    const sc=calcScore(),r=routing(sc);
+    return{first_name:document.getElementById('first_name')?.value,last_name:document.getElementById('last_name')?.value,email:document.getElementById('email')?.value,phone:document.getElementById('phone')?.value,company:document.getElementById('company')?.value,title:document.getElementById('title')?.value,industry:document.getElementById('industry')?.value,company_size:document.getElementById('company_size')?.value,interest:document.querySelector('[name="interest"]:checked')?.value,workflow_desc:document.getElementById('workflow_desc')?.value,frequency:document.querySelector('[name="frequency"]:checked')?.value,time_burden:document.querySelector('[name="time_burden"]:checked')?.value,pain_level:document.querySelector('[name="pain_level"]:checked')?.value,ai_usage:document.querySelector('[name="ai_usage"]:checked')?.value,data_readiness:document.querySelector('[name="data_readiness"]:checked')?.value,authority:document.querySelector('[name="authority"]:checked')?.value,budget:document.querySelector('[name="budget"]:checked')?.value,timeline:document.querySelector('[name="timeline"]:checked')?.value,modules:[...document.querySelectorAll('[name="modules"]:checked')].map(e=>e.value),source:document.getElementById('source')?.value,notes:document.getElementById('notes')?.value,qualification_score:sc,routing_label:r.label,routing_action:r.action};
+  }
+  function getHutk(){const m=document.cookie.match(/hubspotutk=([^;]+)/);return m?m[1]:'';}
+
+  function showSuccess(){
+    document.getElementById('step-3').classList.remove('active');
+    document.getElementById('success-panel').classList.add('show');
+    document.getElementById('form-footer').style.display='none';
+    document.getElementById('trust-strip').style.display='none';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function submitForm(){
+    const data=collect();
+    const btn=document.getElementById('btn-next');
+    btn.textContent='Submitting…';
+    btn.disabled=true;
+
+    // ── Uncomment each custom property line after creating it in HubSpot ──
+    const fields=[
+      {name:'firstname',  value:data.first_name||''},
+      {name:'lastname',   value:data.last_name||''},
+      {name:'email',      value:data.email||''},
+      {name:'phone',      value:data.phone||''},
+      {name:'company',    value:data.company||''},
+      {name:'jobtitle',   value:data.title||''},
+      {name:'industry',   value:data.industry||''},
+      {name:'message',    value:data.notes||''},
+      {name:'demo_interest', value:data.interest||''},
+      {name:'demo_workflow_description', value:data.workflow_desc||''},
+      {name:'demo_workflow_frequency',   value:data.frequency||''},
+      {name:'demo_workflow_time_burden', value:data.time_burden||''},
+      {name:'demo_pain_level',           value:data.pain_level||''},
+      {name:'demo_ai_usage',             value:data.ai_usage||''},
+      {name:'demo_data_readiness',       value:data.data_readiness||''},
+      {name:'demo_authority',            value:data.authority||''},
+      {name:'demo_budget',               value:data.budget||''},
+      {name:'demo_timeline',             value:data.timeline||''},
+      {name:'demo_modules',              value:(data.modules||[]).join('; ')},
+      {name:'demo_qualification_score',  value:String(data.qualification_score)},
+      {name:'demo_routing_label',        value:data.routing_label||''},
+    ].filter(f=>f.value!=='');
+
+    const ctx={pageUri:window.location.href,pageName:'Book a Demo — StrataAI'};
+    const hutk=getHutk(); if(hutk) ctx.hutk=hutk;
+
+    fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${PORTAL_ID}/${FORM_GUID}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({fields,context:ctx})
+    })
+    .then(res=>{
+      if(!res.ok)return res.text().then(t=>{console.error('HubSpot error',res.status,t);throw new Error(t);});
+      showSuccess();
+    })
+    .catch(err=>{
+      console.error('Submit failed:',err);
+      btn.textContent='Book My Demo';
+      btn.disabled=false;
+      if(!document.getElementById('submit-error')){
+        const err=document.createElement('p');
+        err.id='submit-error';
+        err.style.cssText='color:var(--error);font-size:14px;text-align:center;margin:8px 44px 0';
+        err.textContent='Something went wrong. Please try again or email us at hello@spec-technology.com.';
+        document.getElementById('form-footer').before(err);
+      }
+    });
+  }
+  updateUI();
+</script>
+</body>
+</html>
