@@ -818,7 +818,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Civil &amp; Structural Engineering</span>
       <h1>Verify faster. Submit once.<br>Stop the permit-rejection cycle.</h1>
       <p>Pre-built workflows for plan review, MUD feasibility, TCEQ bond reports (RG-178), and survey QA. Every flagged issue cites the specific standard. Every report exports branded and ready to send to the agency.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Book a Demo</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('engineering');return false">Run a live feasibility &#8595;</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -840,6 +840,41 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="wf-card"><div class="wf-num">4</div><h3>Survey Review</h3><p>Cross-references metes &amp; bounds, plat references, and title commitment for closure errors, gap-and-overlap issues, and discrepancies between instruments.</p></div>
       </div>
     </div></section>
+    <!-- LIVE DEMO GATE: Engineering Feasibility (reuses Land feasibility tool) -->
+    <section class="demo-section" id="demo-section-engineering">
+      <div class="section-inner">
+        <div class="demo-section-header">
+          <span class="label lt">Live Demo — No Login</span>
+          <h2 style="color:var(--white);margin-bottom:12px">Run a tract feasibility in 90 seconds.</h2>
+          <p style="color:rgba(255,255,255,0.55);font-size:17px;max-width:560px;margin:0 auto;line-height:1.7">This is the live product — the same interface your team would use on day one. Drop in test data and generate a first-pass feasibility report: jurisdiction, MUD capacity, cost, and yield. No mockup. No slideware.</p>
+        </div>
+        <div class="demo-gate" id="demo-gate-engineering">
+          <div class="demo-gate-lock">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--teal-2)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <h3>Controlled intelligence for your business.</h3>
+          <p class="gate-desc">Sign up to access StrataAI.</p>
+          <form class="gate-form" onsubmit="unlockDemo(event)">
+            <div class="gate-row">
+              <input class="gate-input" type="text" name="firstName" placeholder="First name" required>
+              <input class="gate-input" type="text" name="lastName" placeholder="Last name" required>
+            </div>
+            <input class="gate-input" type="email" name="email" placeholder="Email" required>
+            <input class="gate-input" type="text" name="company" placeholder="Company" required>
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:4px">Get access &rarr;</button>
+            <p class="gate-note">Your information stays with us — no third-party sharing, ever.</p>
+          </form>
+        </div>
+        <div class="demo-frame" id="demo-frame-engineering">
+          <div class="demo-frame-bar">
+            <span class="demo-frame-label"><span class="demo-frame-dot"></span>You're in. Start with: Feasibility Report &rarr;</span>
+            <a href="strata-prototype-v4.html" target="_blank" class="btn btn-outline-lt btn-sm">Open full screen &#8599;</a>
+          </div>
+          <iframe data-src="strata-prototype-v4.html" frameborder="0" title="StrataAI Feasibility Prototype" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
     <section class="bg-surface"><div class="section-inner">
       <span class="label">Results</span>
       <h2>Engineer with confidence. Submit once.</h2>
@@ -936,7 +971,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Commercial Real Estate</span>
       <h1>Portfolio health at a glance.<br>Deal intelligence on demand.</h1>
       <p>Portfolio deal health, NOI anomaly detection, cap rate modeling, and site plan underwriting — across all your centers, with full audit trails and local-model privacy for sensitive documents.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Book a Demo</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('cre');return false">Run a live deal health scan &#8595;</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -958,6 +993,41 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="wf-card"><div class="wf-num">4</div><h3>Underwriting Intelligence</h3><p>Drop a PSA, title commitment, or pro forma. Local DLP gate screens for sensitive content before transmission — what proceeds is clean, scoped, and ready for underwriting.<span class="wf-dlp">LOCAL DLP GATE</span></p></div>
       </div>
     </div></section>
+    <!-- LIVE DEMO GATE: CRE Deal Health -->
+    <section class="demo-section" id="demo-section-cre">
+      <div class="section-inner">
+        <div class="demo-section-header">
+          <span class="label lt">Live Demo — No Login</span>
+          <h2 style="color:var(--white);margin-bottom:12px">Score a portfolio's deal health in 90 seconds.</h2>
+          <p style="color:rgba(255,255,255,0.55);font-size:17px;max-width:560px;margin:0 auto;line-height:1.7">This is the live product — the same interface your team would use on day one. Open the dashboard, review occupancy, NOI, lease risk and capex across six centers, then generate an action plan. No mockup. No slideware.</p>
+        </div>
+        <div class="demo-gate" id="demo-gate-cre">
+          <div class="demo-gate-lock">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--teal-2)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <h3>Controlled intelligence for your business.</h3>
+          <p class="gate-desc">Sign up to access StrataAI.</p>
+          <form class="gate-form" onsubmit="unlockDemo(event)">
+            <div class="gate-row">
+              <input class="gate-input" type="text" name="firstName" placeholder="First name" required>
+              <input class="gate-input" type="text" name="lastName" placeholder="Last name" required>
+            </div>
+            <input class="gate-input" type="email" name="email" placeholder="Email" required>
+            <input class="gate-input" type="text" name="company" placeholder="Company" required>
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:4px">Get access &rarr;</button>
+            <p class="gate-note">Your information stays with us — no third-party sharing, ever.</p>
+          </form>
+        </div>
+        <div class="demo-frame" id="demo-frame-cre">
+          <div class="demo-frame-bar">
+            <span class="demo-frame-label"><span class="demo-frame-dot"></span>You're in. Start with: CRE Deal Health Review &rarr;</span>
+            <a href="strata-prototype-cre.html" target="_blank" class="btn btn-outline-lt btn-sm">Open full screen &#8599;</a>
+          </div>
+          <iframe data-src="strata-prototype-cre.html" frameborder="0" title="StrataAI CRE Deal Health Prototype" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
     <section class="bg-surface"><div class="section-inner">
       <span class="label">Results</span>
       <h2>Lead every deal with intelligence.</h2>
@@ -1136,7 +1206,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <span class="label lt">Heavy Civil Contracting</span>
       <h1>Win more bids. Detect leakage early.<br>Finish with the margin you priced.</h1>
       <p>From ITB to closeout — bid ingestion, scope extraction, sub comparison, and a seven-detector profit scan that finds leakage while there's still time to act on it.</p>
-      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg">Book a Demo</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
+      <div class="btn-group"><a href="#" class="btn btn-primary btn-lg" onclick="scrollToDemo('contractor');return false">See the live project tracker &#8595;</a><a href="#" class="btn btn-outline-lt">Ask a Question</a></div>
     </div></div>
     <section><div class="section-inner">
       <div class="pain-box">
@@ -1158,6 +1228,41 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <div class="wf-card"><div class="wf-num">4</div><h3>Profit Scan — 7 Detectors</h3><p>All seven profit-leak detectors against an active project: underbid, scope gap, cost overrun, pay-app leak, productivity loss, change order opportunity, and cost-to-complete variance. Find it early.</p></div>
       </div>
     </div></section>
+    <!-- LIVE DEMO GATE: Heavy Civil Project Tracker -->
+    <section class="demo-section" id="demo-section-contractor">
+      <div class="section-inner">
+        <div class="demo-section-header">
+          <span class="label lt">Live Demo — No Login</span>
+          <h2 style="color:var(--white);margin-bottom:12px">See a civil portfolio's project health in 90 seconds.</h2>
+          <p style="color:rgba(255,255,255,0.55);font-size:17px;max-width:560px;margin:0 auto;line-height:1.7">This is the live product — the same interface your team would use on day one. Track contract value, billing, RFIs, change orders, pay-app aging, and rain-day allowance across active civil projects. No mockup. No slideware.</p>
+        </div>
+        <div class="demo-gate" id="demo-gate-contractor">
+          <div class="demo-gate-lock">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--teal-2)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <h3>Controlled intelligence for your business.</h3>
+          <p class="gate-desc">Sign up to access StrataAI.</p>
+          <form class="gate-form" onsubmit="unlockDemo(event)">
+            <div class="gate-row">
+              <input class="gate-input" type="text" name="firstName" placeholder="First name" required>
+              <input class="gate-input" type="text" name="lastName" placeholder="Last name" required>
+            </div>
+            <input class="gate-input" type="email" name="email" placeholder="Email" required>
+            <input class="gate-input" type="text" name="company" placeholder="Company" required>
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:4px">Get access &rarr;</button>
+            <p class="gate-note">Your information stays with us — no third-party sharing, ever.</p>
+          </form>
+        </div>
+        <div class="demo-frame" id="demo-frame-contractor">
+          <div class="demo-frame-bar">
+            <span class="demo-frame-label"><span class="demo-frame-dot"></span>You're in. Start with: Project Tracker &rarr;</span>
+            <a href="strata-prototype-heavycivil.html" target="_blank" class="btn btn-outline-lt btn-sm">Open full screen &#8599;</a>
+          </div>
+          <iframe data-src="strata-prototype-heavycivil.html" frameborder="0" title="StrataAI Project Tracker Prototype" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
     <section class="bg-surface"><div class="section-inner">
       <span class="label">Results</span>
       <h2>Build smarter. Finish with the margin you planned.</h2>
@@ -1378,7 +1483,7 @@ function unlockDemo(e) {
       }
     })
   }).catch(function() {});
-  ['land', 'homebuilder'].forEach(function(v) { showDemoFrame(v); });
+  ['land', 'homebuilder', 'engineering', 'cre', 'contractor'].forEach(function(v) { showDemoFrame(v); });
   return false;
 }
 
@@ -1398,7 +1503,7 @@ function showDemoFrame(v) {
 (function initDemoGates() {
   try {
     if (localStorage.getItem('strata_demo_lead')) {
-      ['land', 'homebuilder'].forEach(function(v) { showDemoFrame(v); });
+      ['land', 'homebuilder', 'engineering', 'cre', 'contractor'].forEach(function(v) { showDemoFrame(v); });
     }
   } catch(err) {}
 })();

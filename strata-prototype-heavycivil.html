@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Strata · Project Tracker</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="vendor/chart.umd.min.js"></script>
+<style>
+  :root {
+    --brand-teal: #40868b;
+    --brand-teal-deep: #2f6468;
+    --brand-teal-tint: #e8f2f2;
+    --brand-gold: #b37b28;
+    --brand-gold-soft: #d4982a;
+    --brand-gold-tint: #f6ecd9;
+    --brand-navy: #1B365D;
+    --brand-navy-deep: #0f2240;
+    --brand-navy-tint: #e6eaf2;
+    --brand-slate: #2e393e;
+    --brand-ink: #1a2328;
+    --brand-muted: #5b6b73;
+    --brand-line: #d7dde0;
+    --brand-line-soft: #e9edee;
+    --brand-paper: #f4f6f7;
+    --brand-paper-warm: #f7f4ed;
+    --green: #2BAA70;
+    --green-tint: #d8efe2;
+    --red: #a4451c;
+    --red-tint: #f6d4c4;
+    --shadow-sm: 0 1px 2px rgba(15,18,30,.04);
+    --shadow-md: 0 1px 2px rgba(15,18,30,.04), 0 8px 24px rgba(15,18,30,.05);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--brand-paper); color: var(--brand-slate);
+    font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  header.top {
+    background: #fff; padding: 22px 28px 18px;
+    border-bottom: 3px solid var(--brand-gold);
+    box-shadow: 0 1px 0 var(--brand-line-soft);
+  }
+  header.top .row1 { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  header.top .brand { display: flex; align-items: center; gap: 18px; }
+  header.top .brand img { height: 40px; width: auto; }
+  header.top .titleblock { border-left: 1px solid var(--brand-line); padding-left: 18px; }
+  header.top .eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--brand-teal-deep); font-weight: 600; margin-bottom: 2px; }
+  header.top h1 { margin: 0; font-size: 22px; letter-spacing: -0.015em; font-weight: 700; color: var(--brand-ink); }
+  header.top h1 .light { color: var(--brand-muted); font-weight: 400; }
+  header.top .meta { font-size: 12px; color: var(--brand-muted); margin-top: 8px;
+    font-variant-numeric: tabular-nums; }
+  header.top .meta .dot { color: var(--brand-line); margin: 0 6px; }
+  .ghost-btn { background: transparent; border: 1px solid var(--brand-line); border-radius: 6px;
+    padding: 7px 14px; font: inherit; font-size: 12px; color: var(--brand-teal-deep); cursor: pointer; font-weight: 500; }
+  .ghost-btn:hover { background: var(--brand-teal-tint); border-color: var(--brand-teal); }
+
+  nav.tabs { background: #fff; padding: 0 18px;
+    border-bottom: 1px solid var(--brand-line); box-shadow: var(--shadow-sm);
+    position: sticky; top: 0; z-index: 10; overflow-x: auto; white-space: nowrap; }
+  nav.tabs button { background: transparent; border: 0; padding: 14px 18px;
+    font: inherit; color: var(--brand-muted); cursor: pointer; border-bottom: 3px solid transparent;
+    font-weight: 500; letter-spacing: 0.01em; }
+  nav.tabs button:hover { color: var(--brand-ink); }
+  nav.tabs button.active { color: var(--brand-teal-deep); border-bottom-color: var(--brand-teal);
+    font-weight: 600; }
+  main { padding: 18px 22px 32px; max-width: 1500px; margin: 0 auto; }
+
+  .view { display: none; }
+  .view.active { display: block; }
+  section.pane { display: none; }
+  section.pane.active { display: block; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin-bottom: 18px; }
+  .kpi { background: #fff; border: 1px solid var(--brand-line); border-radius: 8px;
+    padding: 14px 16px; box-shadow: var(--shadow-sm);
+    border-left: 3px solid var(--brand-teal); }
+  .kpi.gold { border-left-color: var(--brand-gold); }
+  .kpi.navy { border-left-color: var(--brand-navy); }
+  .kpi.green { border-left-color: var(--green); }
+  .kpi.red { border-left-color: var(--red); }
+  .kpi .label { color: var(--brand-muted); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.06em; font-weight: 600; }
+  .kpi .value { font-size: 26px; font-weight: 700; margin-top: 4px; letter-spacing: -0.02em;
+    color: var(--brand-ink); }
+  .kpi .sub { color: var(--brand-muted); font-size: 12px; margin-top: 2px; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 14px; margin-bottom: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 14px; margin-bottom: 14px; }
+  .card { background: #fff; border: 1px solid var(--brand-line); border-radius: 8px;
+    padding: 16px 18px; box-shadow: var(--shadow-sm); margin-bottom: 14px; }
+  .card h3 { margin: 0 0 4px; font-size: 14px; font-weight: 700; color: var(--brand-ink);
+    letter-spacing: -0.005em; }
+  .card .hint { color: var(--brand-muted); font-size: 12px; margin-bottom: 12px; }
+  .chart-wrap { position: relative; height: 290px; }
+  .chart-wrap.tall { height: 360px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 9px 11px; text-align: left; border-bottom: 1px solid var(--brand-line-soft);
+    vertical-align: top; }
+  th { background: var(--brand-paper-warm); cursor: pointer; user-select: none; font-weight: 600;
+    color: var(--brand-slate); position: sticky; top: 0; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.04em; }
+  th:hover { color: var(--brand-teal-deep); }
+  th .arrow { color: var(--brand-teal); margin-left: 4px; }
+  tbody tr { cursor: default; }
+  tbody tr.clickable { cursor: pointer; }
+  tbody tr:hover { background: var(--brand-teal-tint); }
+  td .name { font-weight: 500; color: var(--brand-ink); }
+  td .meta { color: var(--brand-muted); font-size: 11px; margin-top: 2px; }
+  td.num { font-variant-numeric: tabular-nums; text-align: right; }
+
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px;
+    background: var(--brand-teal-tint); color: var(--brand-teal-deep); margin-right: 4px;
+    font-weight: 500; white-space: nowrap; }
+  .pill.gold { background: var(--brand-gold-tint); color: var(--brand-gold); }
+  .pill.navy { background: var(--brand-navy-tint); color: var(--brand-navy); }
+  .pill.muted { background: #eef0f3; color: var(--brand-muted); }
+  .pill.warn { background: #fdebd9; color: var(--brand-gold); }
+  .pill.hot  { background: var(--red-tint); color: var(--red); }
+  .pill.green{ background: var(--green-tint); color: var(--green); }
+
+  .progress { width: 100%; height: 8px; background: #eef0f3; border-radius: 4px; overflow: hidden; }
+  .progress > .bar { height: 100%; background: var(--brand-teal); border-radius: 4px; transition: width 0.3s; }
+  .progress > .bar.gold { background: var(--brand-gold); }
+  .progress > .bar.green { background: var(--green); }
+  .progress > .bar.red { background: var(--red); }
+  .progress-mini { display: flex; align-items: center; gap: 8px; }
+  .progress-mini > .progress { flex: 1; }
+  .progress-mini > .pct { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--brand-muted);
+    min-width: 32px; text-align: right; }
+
+  .table-wrap { max-height: 580px; overflow-y: auto; border: 1px solid var(--brand-line);
+    border-radius: 8px; background: #fff; }
+
+  .empty { text-align: center; color: var(--brand-muted); padding: 30px; font-size: 13px; }
+  footer.note { color: var(--brand-muted); font-size: 11px; padding: 20px 28px; text-align: center;
+    border-top: 1px solid var(--brand-line-soft); margin-top: 24px; }
+  footer.note .accent { color: var(--brand-teal-deep); font-weight: 600; }
+
+  /* Project detail header */
+  .proj-header { background: #fff; padding: 18px 28px 14px; border-bottom: 1px solid var(--brand-line-soft); }
+  .proj-name { font-size: 20px; font-weight: 700; color: var(--brand-ink); letter-spacing: -0.01em; }
+  .proj-meta { font-size: 12px; color: var(--brand-muted); margin-top: 4px; }
+  .proj-meta .dot { color: var(--brand-line); margin: 0 6px; }
+
+  /* Lifecycle ribbon */
+  .lifecycle-ribbon { display: flex; gap: 0; margin-top: 14px; flex-wrap: nowrap; overflow-x: auto; }
+  .lifecycle-step { flex: 1; padding: 8px 10px; background: #f4f6f7; color: var(--brand-muted);
+    font-size: 11px; text-align: center; position: relative; min-width: 90px;
+    border-top: 2px solid var(--brand-line); }
+  .lifecycle-step.done { background: var(--brand-teal-tint); color: var(--brand-teal-deep); border-top-color: var(--brand-teal); }
+  .lifecycle-step.current { background: var(--brand-gold-tint); color: var(--brand-gold);
+    border-top-color: var(--brand-gold); font-weight: 600; }
+  .lifecycle-step + .lifecycle-step { margin-left: 2px; }
+
+  /* Gate matrix (compliance) */
+  .gate-matrix th { text-transform: none; letter-spacing: 0; }
+  .gate-row td { vertical-align: middle; }
+  .gate-row .gate-label { font-weight: 500; color: var(--brand-ink); }
+  .gate-row .gate-sub { color: var(--brand-muted); font-size: 11px; }
+
+  /* Pay-app status track (5-stage) */
+  .pa-status { display: inline-flex; gap: 3px; align-items: center; }
+  .pa-status .step { width: 22px; height: 6px; background: #eef0f3; border-radius: 2px; }
+  .pa-status .step.done { background: var(--green); }
+  .pa-status .step.current { background: var(--brand-gold); }
+  .pa-status .step.failed { background: var(--red); }
+  .pa-status .label { font-size: 11px; color: var(--brand-muted); margin-left: 6px; }
+
+  .section-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--brand-gold); font-weight: 600; margin-bottom: 6px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .stat { padding: 10px 12px; background: var(--brand-paper); border-radius: 6px; border: 1px solid var(--brand-line-soft); }
+  .stat .label { color: var(--brand-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+  .stat .value { font-size: 16px; font-weight: 600; color: var(--brand-ink); margin-top: 2px;
+    font-variant-numeric: tabular-nums; }
+  .stat .sub { font-size: 11px; color: var(--brand-muted); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="row1">
+    <div class="brand">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlYAAACuCAYAAAD0+0NCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAE8WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgMTAuMC1jMDAwIDI1LkcuZWY3MmU0ZSwgMjAyNS8wNi8yNy0xODo1NDowNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDI3LjIgKFdpbmRvd3MpIiB4bXA6Q3JlYXRlRGF0ZT0iMjAyNi0wMi0wNFQxMDo1NDoyOC0wNjowMCIgeG1wOk1vZGlmeURhdGU9IjIwMjYtMDItMDRUMTA6NTY6MzItMDY6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMjYtMDItMDRUMTA6NTY6MzItMDY6MDAiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOmU0NDk3M2VkLTllNjgtZWQ0NC04OWZiLWIwOThlMGQ3NzQ1YSIgeG1wTU06RG9jdW1lbnRJ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" alt="Strata">
+      <div class="titleblock">
+        <div class="eyebrow" id="hdrEyebrow">Project Tracker</div>
+        <h1 id="hdrTitle">Civil Construction <span class="light">Portfolio</span></h1>
+      </div>
+    </div>
+    <div>
+      <button id="backBtn" class="ghost-btn" style="display:none">&larr; All Projects</button>
+    </div>
+  </div>
+  <div class="meta" id="hdrSub"></div>
+</header>
+
+<!-- ===== PORTFOLIO OVERVIEW ===== -->
+<section class="view active" id="view-portfolio">
+  <main>
+    <div class="kpi-row" id="kpi-portfolio"></div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Portfolio progress curve</h3>
+        <div class="hint">Planned vs. actual % complete across active projects</div>
+        <div class="chart-wrap"><canvas id="ch-portfolio-progress"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Pay-app aging funnel</h3>
+        <div class="hint">Received &rarr; Inspector &rarr; MUD &rarr; Client &rarr; Paid</div>
+        <div class="chart-wrap"><canvas id="ch-payapp-funnel"></canvas></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Open RFIs &amp; pending COs per project</h3>
+        <div class="chart-wrap"><canvas id="ch-rfi-co"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Rain days vs. contract allowance</h3>
+        <div class="chart-wrap"><canvas id="ch-rain"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Active projects</h3>
+      <div class="hint">Click any row to open project detail</div>
+      <div class="table-wrap"><table id="tbl-portfolio"></table></div>
+    </div>
+  </main>
+</section>
+
+<!-- ===== PROJECT DETAIL ===== -->
+<section class="view" id="view-detail">
+  <div class="proj-header">
+    <div class="proj-name" id="proj-name"></div>
+    <div class="proj-meta" id="proj-meta"></div>
+    <div class="lifecycle-ribbon" id="proj-lifecycle"></div>
+  </div>
+  <nav class="tabs" id="proj-tabs">
+    <button data-tab="overview" class="active">Overview</button>
+    <button data-tab="bid">Bid &amp; Award</button>
+    <button data-tab="schedule">Schedule</button>
+    <button data-tab="financials">Financials</button>
+    <button data-tab="documents">Documents</button>
+    <button data-tab="compliance">Compliance</button>
+    <button data-tab="subs">Subcontractors</button>
+    <button data-tab="field">Field &amp; QA</button>
+    <button data-tab="closeout">Closeout</button>
+    <button data-tab="team">Team</button>
+  </nav>
+  <main>
+    <section class="pane active" id="pane-overview"></section>
+    <section class="pane" id="pane-bid"></section>
+    <section class="pane" id="pane-schedule"></section>
+    <section class="pane" id="pane-financials"></section>
+    <section class="pane" id="pane-documents"></section>
+    <section class="pane" id="pane-compliance"></section>
+    <section class="pane" id="pane-subs"></section>
+    <section class="pane" id="pane-field"></section>
+    <section class="pane" id="pane-closeout"></section>
+    <section class="pane" id="pane-team"></section>
+  </main>
+</section>
+
+<footer class="note">
+  Strata Project Tracker &middot; Mock demo data
+</footer>
+
+<script>
+/* ========== MOCK DATA ========== */
+const TODAY = new Date('2026-05-15');
+
+const LIFECYCLE_ORDER = [
+  { key: 'advertising', label: 'Advertising' },
+  { key: 'bidding', label: 'Bidding' },
+  { key: 'bid_review', label: 'Bid Review' },
+  { key: 'awarded', label: 'Awarded' },
+  { key: 'ntp', label: 'NTP' },
+  { key: 'submittals', label: 'Submittals' },
+  { key: 'construction', label: 'Construction' },
+  { key: 'substantial_complete', label: 'Substantial' },
+  { key: 'closeout', label: 'Closeout' },
+];
+
+const G = (status, receivedOn, approvedOn, notes) =>
+  ({ status, receivedOn: receivedOn || null, approvedOn: approvedOn || null, notes: notes || '' });
+
+const DATA = { projects: [
+  /* ============== PROJECT 1 — BIDDING ============== */
+  {
+    id: 'cypress-creek-waterline',
+    name: 'Harris Co. 12" Waterline — Cypress Creek Sector',
+    owner: { name: 'Harris County Engineering Department', type: 'County' },
+    engineer: 'Strata Engineering',
+    contractor: '(pending award)',
+    scope: 'water',
+    lifecycle: 'bidding',
+    advertising: { advertisedOn: '2026-04-10', firstAdDate: '2026-04-10', addendaCount: 2 },
+    bidsReceived: { count: 0, openedOn: null },
+    bidTab: { preparedOn: null, preparedBy: null },
+    clientReview: { reviewedOn: null, recommendation: null },
+    mudAward: { awardedOn: null, boardMeeting: null, resolutionNo: null },
+    contract: {
+      sumOriginal: 2450000, sumCurrent: 2450000,
+      daysOriginal: 180, daysCurrent: 180,
+      daysElapsed: 0, daysRemaining: 180,
+      rainDaysCharged: 0, timeExtensions: [],
+      pctComplete: 0, workToDate: 0, workRemaining: 2450000,
+      ntpDate: null, substantialCompletionDate: null, finalAcceptanceDate: null,
+    },
+    preExec: {
+      bondsContractor: { performance: G('na'), payment: G('na'), maintenance: G('na') },
+      insuranceContractor: { GL: G('na'), auto: G('na'), umbrella: G('na'), wc: G('na'), expiresOn: null },
+      swpppProposal: G('na'),
+      testingProposal: G('na'),
+      noiFiled: G('na'),
+      preconMeeting: null,
+      permits: { tceqPlansSpecs: G('approved', '2026-03-22', '2026-04-02', 'TCEQ approval letter 2026-04-02'),
+                 countyROW: G('pending') },
+      easements: G('approved', null, '2026-03-15', '8 of 8 acquired'),
+    },
+    payApps: [], rfis: [], submittals: [], changeOrders: [], fieldDirectives: [], subcontractors: [],
+    inspections: [],
+    testing: { concreteBreaks: [], densityTests: [] },
+    dailyReports: [], weatherLog: [],
+    closeout: {
+      punchlist: { open: 0, closed: 0, total: 0 },
+      asBuilts: G('na'), recordDrawings: G('na'),
+      conveyance: { billOfSale: G('na'), easementsToMud: G('na') },
+      engineersCert: G('na'), finalTceqApproval: G('na'), ownerAcceptance: G('na'),
+      warrantyStart: null, warrantyEnd: null,
+    },
+    team: [
+      { role: 'Engineer of Record', name: 'M. Carrera, P.E.', firm: 'Strata Engineering', email: 'mcarrera@strataeng.com', phone: '713-784-4500' },
+      { role: 'Owner Rep', name: 'S. Chen', firm: 'Harris Co. Engineering', email: 'schen@hctx.net', phone: '713-274-3100' },
+    ],
+    photos: [],
+    bidTabBids: [],
+  },
+
+  /* ============== PROJECT 2 — BID REVIEW / AWARD PENDING ============== */
+  {
+    id: 'sienna-sanitary-sewer',
+    name: 'Fort Bend 18" Sanitary — Sienna Plantation',
+    owner: { name: 'Fort Bend County Drainage District', type: 'County' },
+    engineer: 'Strata Engineering',
+    contractor: '(award pending)',
+    scope: 'sewer',
+    lifecycle: 'bid_review',
+    advertising: { advertisedOn: '2026-03-01', firstAdDate: '2026-03-01', addendaCount: 3 },
+    bidsReceived: { count: 5, openedOn: '2026-04-15', lowBidder: 'Lecon Inc.', lowBid: 3650000, spreadPct: 12.4 },
+    bidTab: { preparedOn: '2026-04-18', preparedBy: 'Strata Engineering' },
+    clientReview: { reviewedOn: '2026-04-29', recommendation: 'award' },
+    mudAward: { awardedOn: null, boardMeeting: '2026-05-20', resolutionNo: null },
+    contract: {
+      sumOriginal: 3820000, sumCurrent: 3820000,
+      daysOriginal: 240, daysCurrent: 240,
+      daysElapsed: 0, daysRemaining: 240,
+      rainDaysCharged: 0, timeExtensions: [],
+      pctComplete: 0, workToDate: 0, workRemaining: 3820000,
+      ntpDate: null, substantialCompletionDate: null, finalAcceptanceDate: null,
+    },
+    preExec: {
+      bondsContractor: { performance: G('pending', null, null, 'Required at award'), payment: G('pending'), maintenance: G('pending') },
+      insuranceContractor: { GL: G('pending'), auto: G('pending'), umbrella: G('pending'), wc: G('pending'), expiresOn: null },
+      swpppProposal: G('pending'),
+      testingProposal: G('pending'),
+      noiFiled: G('pending'),
+      preconMeeting: null,
+      permits: { tceqPlansSpecs: G('approved', '2026-02-04', '2026-02-22'),
+                 countyROW: G('approved', null, '2026-03-18') },
+      easements: G('approved', null, '2026-02-28', 'All ROW secured by FBCDD'),
+    },
+    payApps: [], rfis: [], submittals: [], changeOrders: [], fieldDirectives: [], subcontractors: [],
+    inspections: [],
+    testing: { concreteBreaks: [], densityTests: [] },
+    dailyReports: [], weatherLog: [],
+    closeout: {
+      punchlist: { open: 0, closed: 0, total: 0 },
+      asBuilts: G('na'), recordDrawings: G('na'),
+      conveyance: { billOfSale: G('na'), easementsToMud: G('na') },
+      engineersCert: G('na'), finalTceqApproval: G('na'), ownerAcceptance: G('na'),
+      warrantyStart: null, warrantyEnd: null,
+    },
+    team: [
+      { role: 'Engineer of Record', name: 'D. Patel, P.E.', firm: 'Strata Engineering', email: 'dpatel@strataeng.com', phone: '713-784-4500' },
+      { role: 'Owner Rep', name: 'A. Patel', firm: 'Fort Bend Co. DD', email: 'apatel@fbcdd.org', phone: '281-342-9111' },
+    ],
+    photos: [],
+    bidTabBids: [
+      { bidder: 'Lecon Inc.',          total: 3650000, status: 'low' },
+      { bidder: 'Whitley Construction', total: 3812000, status: '' },
+      { bidder: 'Pepper-Lawson Waterworks', total: 3878000, status: '' },
+      { bidder: 'D. L. Meacham',        total: 4105000, status: '' },
+      { bidder: 'Reliance Construction', total: 4180000, status: 'high' },
+    ],
+  },
+
+  /* ============== PROJECT 3 — NTP / SUBMITTALS ============== */
+  {
+    id: 'montgomery-detention-ph2',
+    name: 'Montgomery Co. Regional Detention — Phase 2',
+    owner: { name: 'Montgomery Co. Drainage District #6', type: 'MUD' },
+    engineer: 'Strata Engineering',
+    contractor: 'Tomlinson Construction',
+    scope: 'drainage',
+    lifecycle: 'submittals',
+    advertising: { advertisedOn: '2026-01-15', firstAdDate: '2026-01-15', addendaCount: 1 },
+    bidsReceived: { count: 4, openedOn: '2026-02-25', lowBidder: 'Tomlinson Construction', lowBid: 5140000, spreadPct: 8.2 },
+    bidTab: { preparedOn: '2026-02-28', preparedBy: 'Strata Engineering' },
+    clientReview: { reviewedOn: '2026-03-10', recommendation: 'award' },
+    mudAward: { awardedOn: '2026-03-20', boardMeeting: '2026-03-19', resolutionNo: 'MCDD6-2026-014' },
+    contract: {
+      sumOriginal: 5140000, sumCurrent: 5140000,
+      daysOriginal: 365, daysCurrent: 365,
+      daysElapsed: 44, daysRemaining: 321,
+      rainDaysCharged: 2, timeExtensions: [],
+      pctComplete: 4, workToDate: 205600, workRemaining: 4934400,
+      ntpDate: '2026-04-01', substantialCompletionDate: null, finalAcceptanceDate: null,
+    },
+    preExec: {
+      bondsContractor: {
+        performance: G('approved', '2026-03-25', '2026-03-28', '$5.14M · Travelers Casualty'),
+        payment:     G('approved', '2026-03-25', '2026-03-28', '$5.14M · Travelers Casualty'),
+        maintenance: G('pending', null, null, 'Due at substantial completion'),
+      },
+      insuranceContractor: {
+        GL: G('approved', '2026-03-26', '2026-03-26', '$2M occurrence / $4M aggregate'),
+        auto: G('approved', '2026-03-26', '2026-03-26', '$1M CSL'),
+        umbrella: G('approved', '2026-03-26', '2026-03-26', '$5M'),
+        wc: G('approved', '2026-03-26', '2026-03-26', 'Statutory'),
+        expiresOn: '2027-01-15',
+      },
+      swpppProposal: G('approved', '2026-03-28', '2026-04-01', 'Bluestem Env. Services'),
+      testingProposal: G('approved', '2026-03-28', '2026-04-02', 'Terracon'),
+      noiFiled: { ...G('approved', '2026-04-02', '2026-04-05', 'TPDES TXR15'), confirmationNo: 'TXR15CC81' },
+      preconMeeting: '2026-03-30',
+      permits: {
+        tceqPlansSpecs: G('approved', '2025-11-10', '2025-12-04'),
+        usace404: G('approved', '2025-12-15', '2026-01-22', 'NWP 39 verified'),
+        countyROW: G('approved', null, '2026-02-12'),
+        encroachment: G('na'),
+      },
+      easements: G('approved', null, '2026-01-30', '12 of 12 acquired'),
+    },
+    payApps: [
+      { no: 1, periodStart: '2026-04-01', periodEnd: '2026-04-30', amountRequested: 205600,
+        amountApproved: null, retainagePct: 5, retainageHeld: 10280, status: 'inspector_approved',
+        receivedOn: '2026-05-03', inspectorApprovedOn: '2026-05-08', mudApprovedOn: null,
+        submittedClientOn: null, paidOn: null, lienReleasesAttached: true },
+    ],
+    rfis: [
+      { no: 1, subject: 'Outfall structure rebar spacing', submittedOn: '2026-04-18', responseDue: '2026-04-25', respondedOn: '2026-04-22', status: 'closed', impact: 'none' },
+      { no: 2, subject: 'Conflict with existing 24" storm at Sta. 14+50', submittedOn: '2026-04-28', responseDue: '2026-05-05', respondedOn: '2026-05-02', status: 'closed', impact: 'cost' },
+      { no: 3, subject: 'Embankment lift thickness vs spec', submittedOn: '2026-05-08', responseDue: '2026-05-15', respondedOn: null, status: 'open', impact: 'schedule' },
+    ],
+    submittals: [
+      { no: 'SUB-001', specSection: '02300', subject: 'Earthwork mix design', submittedOn: '2026-04-05', reviewedOn: '2026-04-10', status: 'approved', turnaroundDays: 5 },
+      { no: 'SUB-002', specSection: '02370', subject: 'Riprap gradation', submittedOn: '2026-04-08', reviewedOn: '2026-04-15', status: 'approved_as_noted', turnaroundDays: 7 },
+      { no: 'SUB-003', specSection: '03300', subject: 'Outfall concrete mix design (4000psi)', submittedOn: '2026-04-12', reviewedOn: '2026-04-19', status: 'approved', turnaroundDays: 7 },
+      { no: 'SUB-004', specSection: '02465', subject: 'Geotextile fabric', submittedOn: '2026-04-15', reviewedOn: '2026-04-23', status: 'resubmit_required', turnaroundDays: 8 },
+      { no: 'SUB-005', specSection: '02465', subject: 'Geotextile fabric (re-sub)', submittedOn: '2026-04-29', reviewedOn: '2026-05-05', status: 'approved', turnaroundDays: 6 },
+      { no: 'SUB-006', specSection: '02950', subject: 'Erosion control matting', submittedOn: '2026-05-02', reviewedOn: null, status: 'submitted' },
+    ],
+    changeOrders: [],
+    fieldDirectives: [],
+    subcontractors: [
+      { trade: 'Earthwork',  company: 'Tomlinson Construction (self)', contractAmount: 3100000,
+        insurance: { ...G('approved', null, '2026-03-26'), expiresOn: '2027-01-15' }, w9: G('approved', null, '2026-03-26'), coiOnFile: true },
+      { trade: 'Concrete',   company: 'Holes Inc.',     contractAmount: 480000,
+        insurance: { ...G('approved', null, '2026-04-10'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2026-04-10'), coiOnFile: true },
+      { trade: 'SWPPP',      company: 'Bluestem Env.',  contractAmount: 92000,
+        insurance: { ...G('approved', null, '2026-04-01'), expiresOn: '2027-04-01' }, w9: G('approved', null, '2026-04-01'), coiOnFile: true },
+      { trade: 'Testing',    company: 'Terracon',       contractAmount: 78000,
+        insurance: { ...G('approved', null, '2026-04-02'), expiresOn: '2027-04-02' }, w9: G('approved', null, '2026-04-02'), coiOnFile: true },
+    ],
+    inspections: [
+      { id: 'IR-001', date: '2026-04-08', inspector: 'J. Lopez', category: 'swppp_weekly', result: 'pass', reportUrl: '#', notes: 'BMPs in place pre-mobilization' },
+      { id: 'IR-002', date: '2026-04-15', inspector: 'J. Lopez', category: 'swppp_weekly', result: 'pass', reportUrl: '#', notes: '' },
+      { id: 'IR-003', date: '2026-04-22', inspector: 'J. Lopez', category: 'swppp_weekly', result: 'pass', reportUrl: '#', notes: '' },
+      { id: 'IR-004', date: '2026-04-26', inspector: 'J. Lopez', category: 'post_rain',    result: 'pass', reportUrl: '#', notes: '0.8" rain event; BMPs intact' },
+      { id: 'IR-005', date: '2026-05-01', inspector: 'M. Diaz',  category: 'density',      result: 'pass', reportUrl: '#', notes: 'Embankment Sta. 10+00 lift 3' },
+      { id: 'IR-006', date: '2026-05-06', inspector: 'M. Diaz',  category: 'density',      result: 'fail', reportUrl: '#', notes: 'Lift 4 density 92% (req 95%) — rework' },
+      { id: 'IR-007', date: '2026-05-09', inspector: 'M. Diaz',  category: 'density',      result: 'pass', reportUrl: '#', notes: 'Re-tested 96.4%' },
+    ],
+    testing: {
+      concreteBreaks: [
+        { date: '2026-04-25', location: 'Outfall pour 1', result: 'pass', value: '4380 psi @ 28d' },
+      ],
+      densityTests: [
+        { date: '2026-05-01', location: 'Sta. 10+00, lift 3', result: 'pass', value: '96.1%' },
+        { date: '2026-05-06', location: 'Sta. 10+00, lift 4', result: 'fail', value: '92.0%' },
+        { date: '2026-05-09', location: 'Sta. 10+00, lift 4 (re)', result: 'pass', value: '96.4%' },
+      ],
+    },
+    dailyReports: [
+      { date: '2026-05-12', crewCount: 14, weather: 'Sunny', tempF: 84, workPerformed: 'Embankment lift 5 placement', delays: '' },
+      { date: '2026-05-13', crewCount: 14, weather: 'Partly cloudy', tempF: 86, workPerformed: 'Embankment lift 5/6', delays: '' },
+      { date: '2026-05-14', crewCount: 12, weather: 'Thunderstorms PM', tempF: 81, workPerformed: 'Shutdown 2pm', delays: 'Rain 1.2"' },
+    ],
+    weatherLog: [
+      { date: '2026-04-26', rainIn: 0.8, chargedAsRainDay: false },
+      { date: '2026-05-02', rainIn: 0.4, chargedAsRainDay: false },
+      { date: '2026-05-14', rainIn: 1.2, chargedAsRainDay: true },
+      { date: '2026-05-15', rainIn: 0.9, chargedAsRainDay: true },
+    ],
+    closeout: {
+      punchlist: { open: 0, closed: 0, total: 0 },
+      asBuilts: G('na'), recordDrawings: G('na'),
+      conveyance: { billOfSale: G('na'), easementsToMud: G('na') },
+      engineersCert: G('na'), finalTceqApproval: G('na'), ownerAcceptance: G('na'),
+      warrantyStart: null, warrantyEnd: null,
+    },
+    team: [
+      { role: 'Engineer of Record', name: 'C. Alvarez, P.E.', firm: 'Strata Engineering', email: 'calvarez@strataeng.com', phone: '713-784-4500' },
+      { role: 'Project Manager',    name: 'R. Tomlinson',     firm: 'Tomlinson Construction', email: 'rtomlinson@tomlinson.com', phone: '936-321-7000' },
+      { role: 'Superintendent',     name: 'J. Briscoe',       firm: 'Tomlinson Construction', email: 'jbriscoe@tomlinson.com', phone: '936-321-7050' },
+      { role: 'Inspector',          name: 'J. Lopez',         firm: 'Strata Engineering', email: 'jlopez@strataeng.com', phone: '713-784-4525' },
+      { role: 'MUD Operator',       name: 'L. Hawkins',       firm: 'MCDD #6', email: 'lhawkins@mcdd6.org', phone: '281-298-4500' },
+      { role: 'Geotech / Testing',  name: 'M. Diaz',          firm: 'Terracon', email: 'mdiaz@terracon.com', phone: '281-799-3300' },
+    ],
+    photos: [],
+    bidTabBids: [
+      { bidder: 'Tomlinson Construction', total: 5140000, status: 'low' },
+      { bidder: 'D. L. Meacham',          total: 5320000, status: '' },
+      { bidder: 'Whitley Construction',   total: 5485000, status: '' },
+      { bidder: 'Pepper-Lawson',          total: 5560000, status: 'high' },
+    ],
+  },
+
+  /* ============== PROJECT 4 — CONSTRUCTION, 45% ============== */
+  {
+    id: 'mud-491-section-14',
+    name: 'Harris Co. MUD 491 — Section 14 Utilities',
+    owner: { name: 'Harris Co. MUD #491', type: 'MUD' },
+    engineer: 'Strata Engineering',
+    contractor: 'Whitley Construction',
+    scope: 'mixed',
+    lifecycle: 'construction',
+    advertising: { advertisedOn: '2025-10-01', firstAdDate: '2025-10-01', addendaCount: 4 },
+    bidsReceived: { count: 6, openedOn: '2025-11-04', lowBidder: 'Whitley Construction', lowBid: 7850000, spreadPct: 9.6 },
+    bidTab: { preparedOn: '2025-11-06', preparedBy: 'Strata Engineering' },
+    clientReview: { reviewedOn: '2025-11-18', recommendation: 'award' },
+    mudAward: { awardedOn: '2025-12-04', boardMeeting: '2025-12-03', resolutionNo: 'HCMUD491-2025-038' },
+    contract: {
+      sumOriginal: 7850000, sumCurrent: 8120000,
+      daysOriginal: 270, daysCurrent: 285,
+      daysElapsed: 145, daysRemaining: 140,
+      rainDaysCharged: 11, timeExtensions: [
+        { days: 15, reason: 'Rain days 11/15 + differing site condition Sta. 22+00 (rock)', approvedOn: '2026-04-02' },
+      ],
+      pctComplete: 45, workToDate: 3654000, workRemaining: 4466000,
+      ntpDate: '2025-12-20', substantialCompletionDate: '2026-10-01', finalAcceptanceDate: null,
+    },
+    preExec: {
+      bondsContractor: {
+        performance: G('approved', '2025-12-12', '2025-12-16', '$7.85M · Liberty Mutual'),
+        payment:     G('approved', '2025-12-12', '2025-12-16', '$7.85M · Liberty Mutual'),
+        maintenance: G('pending', null, null, 'Due at substantial'),
+      },
+      insuranceContractor: {
+        GL: G('approved', '2025-12-15', '2025-12-15'),
+        auto: G('approved', '2025-12-15', '2025-12-15'),
+        umbrella: G('approved', '2025-12-15', '2025-12-15', '$10M'),
+        wc: G('approved', '2025-12-15', '2025-12-15'),
+        expiresOn: '2026-12-31',
+      },
+      swpppProposal: G('approved', '2025-12-15', '2025-12-18'),
+      testingProposal: G('approved', '2025-12-15', '2025-12-18'),
+      noiFiled: { ...G('approved', '2025-12-18', '2025-12-22'), confirmationNo: 'TXR15HJ02' },
+      preconMeeting: '2025-12-17',
+      permits: {
+        tceqPlansSpecs: G('approved', '2025-08-20', '2025-09-30'),
+        countyROW: G('approved', null, '2025-11-25'),
+        encroachment: G('approved', null, '2025-12-08', 'CenterPoint encroachment'),
+      },
+      easements: G('approved', null, '2025-11-04'),
+    },
+    payApps: [
+      { no: 1, periodStart: '2025-12-20', periodEnd: '2026-01-31', amountRequested: 312000, amountApproved: 312000, retainagePct: 5, retainageHeld: 15600, status: 'paid', receivedOn: '2026-02-04', inspectorApprovedOn: '2026-02-08', mudApprovedOn: '2026-02-15', submittedClientOn: '2026-02-16', paidOn: '2026-02-28', lienReleasesAttached: true },
+      { no: 2, periodStart: '2026-02-01', periodEnd: '2026-02-28', amountRequested: 458000, amountApproved: 458000, retainagePct: 5, retainageHeld: 22900, status: 'paid', receivedOn: '2026-03-04', inspectorApprovedOn: '2026-03-07', mudApprovedOn: '2026-03-14', submittedClientOn: '2026-03-15', paidOn: '2026-03-26', lienReleasesAttached: true },
+      { no: 3, periodStart: '2026-03-01', periodEnd: '2026-03-31', amountRequested: 612000, amountApproved: 612000, retainagePct: 5, retainageHeld: 30600, status: 'paid', receivedOn: '2026-04-04', inspectorApprovedOn: '2026-04-08', mudApprovedOn: '2026-04-15', submittedClientOn: '2026-04-16', paidOn: '2026-04-28', lienReleasesAttached: true },
+      { no: 4, periodStart: '2026-04-01', periodEnd: '2026-04-30', amountRequested: 728000, amountApproved: 728000, retainagePct: 5, retainageHeld: 36400, status: 'paid', receivedOn: '2026-05-03', inspectorApprovedOn: '2026-05-06', mudApprovedOn: '2026-05-12', submittedClientOn: '2026-05-13', paidOn: '2026-05-25', lienReleasesAttached: true },
+      { no: 5, periodStart: '2026-05-01', periodEnd: '2026-05-14', amountRequested: 386000, amountApproved: null, retainagePct: 5, retainageHeld: 19300, status: 'mud_approved', receivedOn: '2026-05-15', inspectorApprovedOn: '2026-05-15', mudApprovedOn: '2026-05-15', submittedClientOn: null, paidOn: null, lienReleasesAttached: true },
+    ],
+    rfis: [
+      { no: 1, subject: 'Conflict with existing 8" gas at Sta. 12+40', submittedOn: '2026-01-08', responseDue: '2026-01-15', respondedOn: '2026-01-12', status: 'closed', impact: 'cost' },
+      { no: 2, subject: 'Pipe bedding alternate (washed stone)', submittedOn: '2026-01-22', responseDue: '2026-01-29', respondedOn: '2026-01-27', status: 'closed', impact: 'none' },
+      { no: 3, subject: 'Differing site condition — rock at Sta. 22+00', submittedOn: '2026-02-14', responseDue: '2026-02-21', respondedOn: '2026-02-19', status: 'closed', impact: 'both' },
+      { no: 4, subject: 'Manhole conflict at Sta. 27+10', submittedOn: '2026-02-28', responseDue: '2026-03-07', respondedOn: '2026-03-04', status: 'closed', impact: 'schedule' },
+      { no: 5, subject: 'Pavement section alternate', submittedOn: '2026-03-15', responseDue: '2026-03-22', respondedOn: '2026-03-19', status: 'closed', impact: 'cost' },
+      { no: 6, subject: 'Spec clarification: water meter vault dimensions', submittedOn: '2026-03-28', responseDue: '2026-04-04', respondedOn: '2026-04-02', status: 'closed', impact: 'none' },
+      { no: 7, subject: 'Sanitary lateral location lot 142', submittedOn: '2026-04-08', responseDue: '2026-04-15', respondedOn: '2026-04-13', status: 'closed', impact: 'none' },
+      { no: 8, subject: 'Storm outfall riprap quantity', submittedOn: '2026-04-15', responseDue: '2026-04-22', respondedOn: '2026-04-19', status: 'closed', impact: 'cost' },
+      { no: 9, subject: 'Curb &amp; gutter detail at radius', submittedOn: '2026-04-22', responseDue: '2026-04-29', respondedOn: '2026-04-27', status: 'closed', impact: 'none' },
+      { no:10, subject: 'Hydrant lead pipe class', submittedOn: '2026-04-30', responseDue: '2026-05-07', respondedOn: null, status: 'open', impact: 'cost' },
+      { no:11, subject: 'Pavement marking spec (thermoplastic vs paint)', submittedOn: '2026-05-04', responseDue: '2026-05-11', respondedOn: null, status: 'open', impact: 'none' },
+      { no:12, subject: 'Curb inlet top elevation conflict', submittedOn: '2026-05-12', responseDue: '2026-05-19', respondedOn: null, status: 'open', impact: 'schedule' },
+    ],
+    submittals: [
+      { no: 'SUB-001', specSection: '02500', subject: 'C900 PVC pipe data sheet', submittedOn: '2025-12-22', reviewedOn: '2025-12-28', status: 'approved', turnaroundDays: 6 },
+      { no: 'SUB-002', specSection: '02530', subject: 'SDR-26 sanitary pipe', submittedOn: '2025-12-22', reviewedOn: '2025-12-29', status: 'approved', turnaroundDays: 7 },
+      { no: 'SUB-003', specSection: '02500', subject: 'Ductile iron fittings', submittedOn: '2025-12-29', reviewedOn: '2026-01-06', status: 'approved', turnaroundDays: 8 },
+      { no: 'SUB-004', specSection: '02300', subject: 'Bedding material gradation', submittedOn: '2026-01-05', reviewedOn: '2026-01-12', status: 'approved_as_noted', turnaroundDays: 7 },
+      { no: 'SUB-005', specSection: '03300', subject: 'Concrete mix design 3000psi', submittedOn: '2026-01-12', reviewedOn: '2026-01-22', status: 'approved', turnaroundDays: 10 },
+      { no: 'SUB-006', specSection: '02740', subject: 'Asphalt mix design', submittedOn: '2026-02-01', reviewedOn: '2026-02-12', status: 'rejected', turnaroundDays: 11 },
+      { no: 'SUB-007', specSection: '02740', subject: 'Asphalt mix design (re-sub)', submittedOn: '2026-02-22', reviewedOn: '2026-03-02', status: 'approved', turnaroundDays: 8 },
+      { no: 'SUB-008', specSection: '02580', subject: 'Manhole frames &amp; covers', submittedOn: '2026-02-10', reviewedOn: '2026-02-17', status: 'approved', turnaroundDays: 7 },
+      { no: 'SUB-009', specSection: '02620', subject: 'Storm pipe RCP class III', submittedOn: '2026-02-18', reviewedOn: '2026-02-25', status: 'approved', turnaroundDays: 7 },
+      { no: 'SUB-010', specSection: '02510', subject: 'Hydrant assemblies', submittedOn: '2026-03-04', reviewedOn: '2026-03-11', status: 'approved', turnaroundDays: 7 },
+      { no: 'SUB-011', specSection: '02510', subject: 'Valves &amp; boxes', submittedOn: '2026-03-04', reviewedOn: '2026-03-12', status: 'approved', turnaroundDays: 8 },
+      { no: 'SUB-012', specSection: '02950', subject: 'Erosion control matting', submittedOn: '2026-03-22', reviewedOn: '2026-03-30', status: 'approved', turnaroundDays: 8 },
+      { no: 'SUB-013', specSection: '02740', subject: 'Pavement markings (thermoplastic)', submittedOn: '2026-05-04', reviewedOn: null, status: 'submitted' },
+      { no: 'SUB-014', specSection: '02580', subject: 'Adjustable manhole risers', submittedOn: '2026-05-08', reviewedOn: null, status: 'submitted' },
+    ],
+    changeOrders: [
+      { no: 1, reason: 'Differing site condition — rock excavation Sta. 22+00 to 25+50', cost: 187000, daysImpact: 9, status: 'approved', approvedOn: '2026-03-12' },
+      { no: 2, reason: 'Additional hydrants per Fire Marshal (3 EA)', cost: 83000, daysImpact: 4, status: 'approved', approvedOn: '2026-04-02' },
+      { no: 3, reason: 'Owner-requested: upsize 8" to 12" water at Lot 200-220', cost: 142000, daysImpact: 6, status: 'owner_review', approvedOn: null },
+    ],
+    fieldDirectives: [
+      { no: 1, date: '2026-02-14', description: 'Begin rock excavation at Sta. 22+00 pending CO', estCost: 187000, convertedToCO: 1 },
+      { no: 2, date: '2026-03-25', description: 'Install 3 add\'l hydrants per Fire Marshal', estCost: 83000, convertedToCO: 2 },
+      { no: 3, date: '2026-05-08', description: 'Pothole conflicts on Lot 178 lateral — proceed T&amp;M', estCost: 12500, convertedToCO: null },
+    ],
+    subcontractors: [
+      { trade: 'GC self-perform (utilities)', company: 'Whitley Construction', contractAmount: 5200000,
+        insurance: { ...G('approved', null, '2025-12-15'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2025-12-15'), coiOnFile: true },
+      { trade: 'Earthwork',  company: 'Briscoe Excavation', contractAmount: 920000,
+        insurance: { ...G('approved', null, '2025-12-18'), expiresOn: '2026-08-15' }, w9: G('approved', null, '2025-12-18'), coiOnFile: true },
+      { trade: 'Concrete',   company: 'Holes Inc.', contractAmount: 620000,
+        insurance: { ...G('approved', null, '2025-12-20'), expiresOn: '2026-06-10' }, w9: G('approved', null, '2025-12-20'), coiOnFile: true },
+      { trade: 'Asphalt',    company: 'Knife River Houston', contractAmount: 410000,
+        insurance: { ...G('approved', null, '2026-02-25'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2026-02-25'), coiOnFile: true },
+      { trade: 'Striping',   company: 'TrafficWorks Texas', contractAmount: 38000,
+        insurance: { ...G('submitted', '2026-05-10', null, 'COI received, pending review'), expiresOn: '2027-05-01' }, w9: G('approved', null, '2026-05-10'), coiOnFile: true },
+      { trade: 'SWPPP',      company: 'Bluestem Env.', contractAmount: 64000,
+        insurance: { ...G('approved', null, '2025-12-18'), expiresOn: '2027-04-01' }, w9: G('approved', null, '2025-12-18'), coiOnFile: true },
+      { trade: 'Testing',    company: 'Aviles Engineering', contractAmount: 95000,
+        insurance: { ...G('approved', null, '2025-12-22'), expiresOn: '2026-06-30' }, w9: G('approved', null, '2025-12-22'), coiOnFile: true },
+      { trade: 'Survey',     company: 'Cobb, Fendley &amp; Associates', contractAmount: 72000,
+        insurance: { ...G('approved', null, '2025-12-22'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2025-12-22'), coiOnFile: true },
+    ],
+    inspections: [
+      { id: 'IR-021', date: '2026-04-02', inspector: 'T. Russell', category: 'pressure_test', result: 'pass', reportUrl: '#', notes: '12" water main Sta. 0+00 to 8+50, 200psi 2hr' },
+      { id: 'IR-022', date: '2026-04-09', inspector: 'T. Russell', category: 'pressure_test', result: 'fail', reportUrl: '#', notes: 'Sta. 8+50 to 14+00 — joint leak at fitting' },
+      { id: 'IR-023', date: '2026-04-11', inspector: 'T. Russell', category: 'pressure_test', result: 'pass', reportUrl: '#', notes: 'Re-test after repair' },
+      { id: 'IR-024', date: '2026-04-15', inspector: 'T. Russell', category: 'tie_in',        result: 'pass', reportUrl: '#', notes: 'Tie-in to existing 12" at Cypress-Rosehill Rd' },
+      { id: 'IR-025', date: '2026-04-22', inspector: 'M. Diaz',   category: 'density',       result: 'pass', reportUrl: '#', notes: 'Trench backfill Sta. 14+00' },
+      { id: 'IR-026', date: '2026-04-29', inspector: 'M. Diaz',   category: 'concrete',      result: 'pass', reportUrl: '#', notes: '4 cylinders, 4220 psi avg @ 28d' },
+      { id: 'IR-027', date: '2026-05-06', inspector: 'T. Russell', category: 'pressure_test', result: 'pass', reportUrl: '#', notes: 'Sanitary sewer air pressure Sta. 0-12' },
+      { id: 'IR-028', date: '2026-05-13', inspector: 'T. Russell', category: 'final',        result: 'info', reportUrl: '#', notes: 'Walk-through Phase A — minor punchlist' },
+    ],
+    testing: {
+      concreteBreaks: [
+        { date: '2026-03-08', location: 'Manhole MH-014 base', result: 'pass', value: '3850 psi @ 28d' },
+        { date: '2026-04-12', location: 'Headwall Sta. 19+50', result: 'pass', value: '4100 psi @ 28d' },
+        { date: '2026-04-29', location: 'Curb inlet pours', result: 'pass', value: '4220 psi @ 28d' },
+      ],
+      densityTests: [
+        { date: '2026-03-14', location: 'Trench Sta. 4+50', result: 'pass', value: '97.2%' },
+        { date: '2026-04-04', location: 'Trench Sta. 11+00', result: 'pass', value: '95.8%' },
+        { date: '2026-04-22', location: 'Trench Sta. 14+00', result: 'pass', value: '96.4%' },
+        { date: '2026-05-10', location: 'Subbase Sta. 8+00', result: 'fail', value: '92.5%' },
+        { date: '2026-05-12', location: 'Subbase Sta. 8+00 (re)', result: 'pass', value: '95.6%' },
+      ],
+      pressureTest: { date: '2026-04-11', location: 'Full water main', result: 'pass', value: '200psi/2hr' },
+      bacterialTest: { date: '2026-04-18', location: 'Water main flush', result: 'pass', value: 'No coliform detected' },
+    },
+    dailyReports: [
+      { date: '2026-05-11', crewCount: 22, weather: 'Sunny', tempF: 88, workPerformed: 'Asphalt base course Sta. 6-12', delays: '' },
+      { date: '2026-05-12', crewCount: 24, weather: 'Sunny', tempF: 90, workPerformed: 'Asphalt + manhole adjustments', delays: '' },
+      { date: '2026-05-13', crewCount: 22, weather: 'Partly cloudy', tempF: 88, workPerformed: 'Pavement markings prep', delays: '' },
+      { date: '2026-05-14', crewCount: 18, weather: 'Storms PM', tempF: 82, workPerformed: 'Half-day; demob', delays: 'Rain 1.4"' },
+    ],
+    weatherLog: [
+      { date: '2026-02-04', rainIn: 1.1, chargedAsRainDay: true },
+      { date: '2026-02-18', rainIn: 0.9, chargedAsRainDay: true },
+      { date: '2026-03-08', rainIn: 0.6, chargedAsRainDay: false },
+      { date: '2026-03-22', rainIn: 1.4, chargedAsRainDay: true },
+      { date: '2026-04-03', rainIn: 0.8, chargedAsRainDay: true },
+      { date: '2026-04-15', rainIn: 1.2, chargedAsRainDay: true },
+      { date: '2026-04-26', rainIn: 0.7, chargedAsRainDay: true },
+      { date: '2026-05-02', rainIn: 0.5, chargedAsRainDay: false },
+      { date: '2026-05-14', rainIn: 1.4, chargedAsRainDay: true },
+    ],
+    closeout: {
+      punchlist: { open: 0, closed: 0, total: 0 },
+      asBuilts: G('na'), recordDrawings: G('na'),
+      conveyance: { billOfSale: G('na'), easementsToMud: G('na') },
+      engineersCert: G('na'), finalTceqApproval: G('na'), ownerAcceptance: G('na'),
+      warrantyStart: null, warrantyEnd: null,
+    },
+    team: [
+      { role: 'Engineer of Record', name: 'J. Kim, P.E.', firm: 'Strata Engineering', email: 'jkim@strataeng.com', phone: '713-784-4500' },
+      { role: 'Project Manager',    name: 'K. Whitley',         firm: 'Whitley Construction', email: 'kwhitley@whitley.com', phone: '281-456-2200' },
+      { role: 'Superintendent',     name: 'D. Briscoe',         firm: 'Whitley Construction', email: 'dbriscoe@whitley.com', phone: '281-456-2240' },
+      { role: 'Inspector',          name: 'T. Russell',         firm: 'Strata Engineering', email: 'trussell@strataeng.com', phone: '713-784-4530' },
+      { role: 'MUD Operator',       name: 'B. Almanza',         firm: 'Inframark / MUD 491', email: 'balmanza@inframark.com', phone: '281-579-4505' },
+      { role: 'Surveyor',           name: 'P. Cobb',            firm: 'Cobb, Fendley & Associates', email: 'pcobb@cobbfendley.com', phone: '713-462-3242' },
+      { role: 'Geotech / Testing',  name: 'M. Diaz',            firm: 'Aviles Engineering', email: 'mdiaz@aviles.com', phone: '281-953-0000' },
+    ],
+    photos: [],
+    bidTabBids: [
+      { bidder: 'Whitley Construction', total: 7850000, status: 'low' },
+      { bidder: 'D. L. Meacham',        total: 8120000, status: '' },
+      { bidder: 'Tomlinson Construction', total: 8240000, status: '' },
+      { bidder: 'Pepper-Lawson',        total: 8410000, status: '' },
+      { bidder: 'Lecon Inc.',           total: 8585000, status: '' },
+      { bidder: 'Reliance Construction', total: 8720000, status: 'high' },
+    ],
+  },
+
+  /* ============== PROJECT 5 — SUBSTANTIAL COMPLETE ============== */
+  {
+    id: 'hcfcd-w100-channel',
+    name: 'HCFCD W-100 Channel Improvements',
+    owner: { name: 'Harris County Flood Control District', type: 'HCFCD' },
+    engineer: 'Strata Engineering',
+    contractor: 'Lecon Inc.',
+    scope: 'drainage',
+    lifecycle: 'substantial_complete',
+    advertising: { advertisedOn: '2024-08-15', firstAdDate: '2024-08-15', addendaCount: 5 },
+    bidsReceived: { count: 7, openedOn: '2024-09-20', lowBidder: 'Lecon Inc.', lowBid: 12300000, spreadPct: 14.2 },
+    bidTab: { preparedOn: '2024-09-23', preparedBy: 'Strata Engineering' },
+    clientReview: { reviewedOn: '2024-10-04', recommendation: 'award' },
+    mudAward: { awardedOn: '2024-10-18', boardMeeting: '2024-10-15', resolutionNo: 'HCFCD-2024-W100-A' },
+    contract: {
+      sumOriginal: 12300000, sumCurrent: 13050000,
+      daysOriginal: 540, daysCurrent: 580,
+      daysElapsed: 575, daysRemaining: 5,
+      rainDaysCharged: 28, timeExtensions: [
+        { days: 18, reason: 'Rain days 23 of 28', approvedOn: '2025-08-12' },
+        { days: 22, reason: 'Differing site condition + utility relocation delay', approvedOn: '2025-11-20' },
+      ],
+      pctComplete: 96, workToDate: 12528000, workRemaining: 522000,
+      ntpDate: '2024-11-04', substantialCompletionDate: '2026-04-10', finalAcceptanceDate: null,
+    },
+    preExec: {
+      bondsContractor: {
+        performance: G('approved', '2024-10-25', '2024-10-28', '$12.3M · Travelers'),
+        payment:     G('approved', '2024-10-25', '2024-10-28', '$12.3M · Travelers'),
+        maintenance: G('approved', '2026-04-10', '2026-04-12', '2-year · $1.305M'),
+      },
+      insuranceContractor: {
+        GL: G('approved', '2024-10-28', '2024-10-28'),
+        auto: G('approved', '2024-10-28', '2024-10-28'),
+        umbrella: G('approved', '2024-10-28', '2024-10-28', '$10M'),
+        wc: G('approved', '2024-10-28', '2024-10-28'),
+        expiresOn: '2026-06-30',
+      },
+      swpppProposal: G('approved', '2024-10-30', '2024-11-01'),
+      testingProposal: G('approved', '2024-10-30', '2024-11-01'),
+      noiFiled: { ...G('approved', '2024-11-01', '2024-11-04'), confirmationNo: 'TXR15GR47' },
+      preconMeeting: '2024-10-30',
+      permits: {
+        tceqPlansSpecs: G('na'),
+        usace404: G('approved', '2024-05-12', '2024-07-18', 'IP-2024-0322'),
+        countyROW: G('approved', null, '2024-09-10'),
+      },
+      easements: G('approved', null, '2024-09-25'),
+    },
+    payApps: Array.from({ length: 16 }, (_, i) => ({
+      no: i + 1,
+      periodStart: '2024-11-04', periodEnd: '2024-12-04',
+      amountRequested: 750000, amountApproved: 750000, retainagePct: 5, retainageHeld: 37500,
+      status: 'paid',
+      receivedOn: '2024-12-08', inspectorApprovedOn: '2024-12-12', mudApprovedOn: '2024-12-18',
+      submittedClientOn: '2024-12-19', paidOn: '2025-01-02', lienReleasesAttached: true,
+    })),
+    rfis: [
+      { no: 1, subject: 'Channel side-slope alternate', submittedOn: '2024-11-20', responseDue: '2024-11-27', respondedOn: '2024-11-26', status: 'closed', impact: 'cost' },
+      { no: 2, subject: 'Outfall headwall conflict with existing storm', submittedOn: '2025-01-14', responseDue: '2025-01-21', respondedOn: '2025-01-20', status: 'closed', impact: 'schedule' },
+      { no: 3, subject: 'Wet weather work — saturated subgrade', submittedOn: '2025-05-08', responseDue: '2025-05-15', respondedOn: '2025-05-13', status: 'closed', impact: 'schedule' },
+      { no: 4, subject: 'Riprap gradation alternate (cost)', submittedOn: '2025-08-22', responseDue: '2025-08-29', respondedOn: '2025-08-27', status: 'closed', impact: 'cost' },
+      { no: 5, subject: 'Maintenance bench elevation (final walk-through)', submittedOn: '2026-04-02', responseDue: '2026-04-09', respondedOn: '2026-04-06', status: 'closed', impact: 'none' },
+    ],
+    submittals: [
+      { no: 'SUB-001', specSection: '02300', subject: 'Earthwork mix', submittedOn: '2024-11-06', reviewedOn: '2024-11-13', status: 'approved', turnaroundDays: 7 },
+      { no: 'SUB-018', specSection: '02370', subject: 'Riprap gradation', submittedOn: '2025-01-22', reviewedOn: '2025-01-30', status: 'approved', turnaroundDays: 8 },
+      { no: 'SUB-024', specSection: '02465', subject: 'Geotextile fabric', submittedOn: '2025-02-12', reviewedOn: '2025-02-20', status: 'approved', turnaroundDays: 8 },
+      { no: 'SUB-031', specSection: '02950', subject: 'Erosion matting', submittedOn: '2025-04-04', reviewedOn: '2025-04-11', status: 'approved_as_noted', turnaroundDays: 7 },
+      { no: 'SUB-044', specSection: '02620', subject: 'Storm pipe RCP IV', submittedOn: '2025-06-22', reviewedOn: '2025-07-01', status: 'approved', turnaroundDays: 9 },
+    ],
+    changeOrders: [
+      { no: 1, reason: 'Riprap quantity overrun', cost: 280000, daysImpact: 8, status: 'approved', approvedOn: '2025-03-04' },
+      { no: 2, reason: 'Differing site condition — unsuitable soils', cost: 215000, daysImpact: 12, status: 'approved', approvedOn: '2025-08-18' },
+      { no: 3, reason: 'AT&amp;T fiber relocation coordination', cost: 95000, daysImpact: 10, status: 'approved', approvedOn: '2025-11-12' },
+      { no: 4, reason: 'Owner-added: maintenance access ramp', cost: 160000, daysImpact: 10, status: 'approved', approvedOn: '2026-02-04' },
+    ],
+    fieldDirectives: [
+      { no: 1, date: '2025-02-12', description: 'Riprap quantity overrun proceed', estCost: 280000, convertedToCO: 1 },
+      { no: 2, date: '2025-07-29', description: 'Unsuitable soils — proceed remediation', estCost: 215000, convertedToCO: 2 },
+    ],
+    subcontractors: [
+      { trade: 'Earthwork',  company: 'Lecon Inc. (self)', contractAmount: 7800000,
+        insurance: { ...G('approved', null, '2024-10-28'), expiresOn: '2026-06-30' }, w9: G('approved', null, '2024-10-28'), coiOnFile: true },
+      { trade: 'Concrete',   company: 'Holes Inc.', contractAmount: 1200000,
+        insurance: { ...G('approved', null, '2024-11-04'), expiresOn: '2026-08-31' }, w9: G('approved', null, '2024-11-04'), coiOnFile: true },
+      { trade: 'Riprap',     company: 'Vulcan Materials', contractAmount: 950000,
+        insurance: { ...G('approved', null, '2024-11-04'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2024-11-04'), coiOnFile: true },
+      { trade: 'Survey',     company: 'Cobb, Fendley &amp; Associates', contractAmount: 195000,
+        insurance: { ...G('approved', null, '2024-11-04'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2024-11-04'), coiOnFile: true },
+      { trade: 'Testing',    company: 'Terracon', contractAmount: 142000,
+        insurance: { ...G('approved', null, '2024-11-04'), expiresOn: '2026-04-15', notes: 'Renewal in 30 days' }, w9: G('approved', null, '2024-11-04'), coiOnFile: true },
+    ],
+    inspections: Array.from({ length: 28 }, (_, i) => ({
+      id: `IR-${(101 + i).toString().padStart(3, '0')}`,
+      date: '2025-12-' + (((i % 28) + 1) + '').padStart(2, '0'),
+      inspector: 'T. Russell',
+      category: ['pressure_test','density','concrete','tie_in','stormwater','swppp_weekly','post_rain','tceq','final'][i % 9],
+      result: i % 11 === 0 ? 'fail' : 'pass', reportUrl: '#',
+      notes: 'Routine inspection',
+    })),
+    testing: {
+      concreteBreaks: [
+        { date: '2025-03-12', location: 'Outfall headwall', result: 'pass', value: '4250 psi @ 28d' },
+        { date: '2025-08-04', location: 'Maintenance ramp', result: 'pass', value: '4180 psi @ 28d' },
+      ],
+      densityTests: [
+        { date: '2025-04-15', location: 'Channel berm Sta. 0+50', result: 'pass', value: '97.1%' },
+        { date: '2025-09-22', location: 'Channel berm Sta. 12+00', result: 'pass', value: '96.4%' },
+      ],
+    },
+    dailyReports: [
+      { date: '2026-04-08', crewCount: 12, weather: 'Sunny', tempF: 78, workPerformed: 'Final punchlist walkthrough prep', delays: '' },
+      { date: '2026-04-10', crewCount: 8, weather: 'Sunny', tempF: 80, workPerformed: 'Substantial completion walkthrough', delays: '' },
+    ],
+    weatherLog: [],
+    closeout: {
+      punchlist: { open: 24, closed: 16, total: 40, ageDays: 35 },
+      asBuilts: G('submitted', '2026-04-22', null, 'Under engineer review'),
+      recordDrawings: G('pending', null, null, 'Pending as-built approval'),
+      conveyance: {
+        billOfSale: G('pending'),
+        easementsToMud: G('na'),
+      },
+      engineersCert: G('na', null, null, 'HCFCD project — N/A'),
+      finalTceqApproval: G('na'),
+      ownerAcceptance: G('pending', null, null, 'HCFCD acceptance pending final acceptance walkthrough'),
+      warrantyStart: '2026-04-10', warrantyEnd: '2027-04-10',
+    },
+    team: [
+      { role: 'Engineer of Record', name: 'M. Carrera, P.E.', firm: 'Strata Engineering', email: 'mcarrera@strataeng.com', phone: '713-784-4500' },
+      { role: 'Project Manager',    name: 'V. Esquivel',        firm: 'Lecon Inc.', email: 'vesquivel@lecon.com', phone: '713-433-1400' },
+      { role: 'Superintendent',     name: 'C. Reyna',           firm: 'Lecon Inc.', email: 'creyna@lecon.com', phone: '713-433-1440' },
+      { role: 'Inspector',          name: 'T. Russell',         firm: 'Strata Engineering', email: 'trussell@strataeng.com', phone: '713-784-4530' },
+      { role: 'Owner Rep',          name: 'D. Klein',           firm: 'HCFCD', email: 'dklein@hcfcd.org', phone: '713-684-4000' },
+      { role: 'Surveyor',           name: 'P. Cobb',            firm: 'Cobb, Fendley & Associates', email: 'pcobb@cobbfendley.com', phone: '713-462-3242' },
+    ],
+    photos: [],
+    bidTabBids: [
+      { bidder: 'Lecon Inc.',                 total: 12300000, status: 'low' },
+      { bidder: 'Whitley Construction',       total: 12950000, status: '' },
+      { bidder: 'Pepper-Lawson Construction', total: 13180000, status: '' },
+      { bidder: 'Tomlinson Construction',     total: 13420000, status: '' },
+      { bidder: 'D. L. Meacham',              total: 13780000, status: '' },
+      { bidder: 'Hassell Construction',       total: 13950000, status: '' },
+      { bidder: 'Reliance Construction',      total: 14050000, status: 'high' },
+    ],
+  },
+
+  /* ============== PROJECT 6 — CLOSEOUT / WARRANTY ============== */
+  {
+    id: 'westchase-repaving',
+    name: 'City of Houston Westchase Repaving',
+    owner: { name: 'City of Houston Public Works', type: 'City' },
+    engineer: 'Strata Engineering',
+    contractor: 'Knife River Houston',
+    scope: 'paving',
+    lifecycle: 'closeout',
+    advertising: { advertisedOn: '2024-09-10', firstAdDate: '2024-09-10', addendaCount: 2 },
+    bidsReceived: { count: 5, openedOn: '2024-10-08', lowBidder: 'Knife River Houston', lowBid: 4600000, spreadPct: 9.8 },
+    bidTab: { preparedOn: '2024-10-10', preparedBy: 'Strata Engineering' },
+    clientReview: { reviewedOn: '2024-10-20', recommendation: 'award' },
+    mudAward: { awardedOn: '2024-11-05', boardMeeting: '2024-11-04', resolutionNo: 'COH-PW-2024-244' },
+    contract: {
+      sumOriginal: 4600000, sumCurrent: 4780000,
+      daysOriginal: 240, daysCurrent: 255,
+      daysElapsed: 255, daysRemaining: 0,
+      rainDaysCharged: 9, timeExtensions: [
+        { days: 15, reason: 'Rain days', approvedOn: '2025-09-22' },
+      ],
+      pctComplete: 100, workToDate: 4780000, workRemaining: 0,
+      ntpDate: '2024-12-02', substantialCompletionDate: '2025-10-15', finalAcceptanceDate: '2025-11-15',
+    },
+    preExec: {
+      bondsContractor: {
+        performance: G('approved', '2024-11-10', '2024-11-12'),
+        payment:     G('approved', '2024-11-10', '2024-11-12'),
+        maintenance: G('approved', '2025-10-15', '2025-10-17', '1-year · $478k'),
+      },
+      insuranceContractor: {
+        GL: G('approved', '2024-11-12', '2024-11-12'),
+        auto: G('approved', '2024-11-12', '2024-11-12'),
+        umbrella: G('approved', '2024-11-12', '2024-11-12'),
+        wc: G('approved', '2024-11-12', '2024-11-12'),
+        expiresOn: '2026-12-31',
+      },
+      swpppProposal: G('approved', '2024-11-15', '2024-11-18'),
+      testingProposal: G('approved', '2024-11-15', '2024-11-18'),
+      noiFiled: { ...G('approved', '2024-11-20', '2024-11-22'), confirmationNo: 'TXR15FA12' },
+      preconMeeting: '2024-11-25',
+      permits: {
+        tceqPlansSpecs: G('na'),
+        countyROW: G('approved', null, '2024-10-15'),
+        encroachment: G('approved', null, '2024-11-01', 'Multiple ROW work permits'),
+      },
+      easements: G('approved', null, '2024-10-22'),
+    },
+    payApps: Array.from({ length: 9 }, (_, i) => ({
+      no: i + 1,
+      periodStart: '2024-12-02', periodEnd: '2025-01-02',
+      amountRequested: 530000, amountApproved: 530000,
+      retainagePct: i < 8 ? 5 : 0, retainageHeld: i < 8 ? 26500 : 0,
+      status: 'paid',
+      receivedOn: '2025-01-04', inspectorApprovedOn: '2025-01-08', mudApprovedOn: '2025-01-14',
+      submittedClientOn: '2025-01-15', paidOn: '2025-01-28', lienReleasesAttached: true,
+    })),
+    rfis: [
+      { no: 1, subject: 'ADA ramp tolerance at Wilcrest', submittedOn: '2024-12-18', responseDue: '2024-12-25', respondedOn: '2024-12-23', status: 'closed', impact: 'none' },
+      { no: 2, subject: 'Striping conflict with existing crosswalk', submittedOn: '2025-04-04', responseDue: '2025-04-11', respondedOn: '2025-04-09', status: 'closed', impact: 'none' },
+    ],
+    submittals: [
+      { no: 'SUB-001', specSection: '02740', subject: 'Asphalt mix design (Type D)', submittedOn: '2024-12-05', reviewedOn: '2024-12-12', status: 'approved', turnaroundDays: 7 },
+      { no: 'SUB-002', specSection: '02740', subject: 'Pavement markings thermoplastic', submittedOn: '2025-02-10', reviewedOn: '2025-02-17', status: 'approved', turnaroundDays: 7 },
+    ],
+    changeOrders: [
+      { no: 1, reason: 'Add\'l ADA ramps per COH inspector', cost: 95000, daysImpact: 5, status: 'approved', approvedOn: '2025-03-10' },
+      { no: 2, reason: 'Striping upgrade to thermoplastic on full length', cost: 85000, daysImpact: 4, status: 'approved', approvedOn: '2025-06-04' },
+    ],
+    fieldDirectives: [
+      { no: 1, date: '2025-02-22', description: 'Additional ADA ramps proceed T&amp;M', estCost: 95000, convertedToCO: 1 },
+    ],
+    subcontractors: [
+      { trade: 'Paving (self)', company: 'Knife River Houston', contractAmount: 3200000,
+        insurance: { ...G('approved', null, '2024-11-12'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2024-11-12'), coiOnFile: true },
+      { trade: 'Concrete',     company: 'Holes Inc.', contractAmount: 720000,
+        insurance: { ...G('approved', null, '2024-11-15'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2024-11-15'), coiOnFile: true },
+      { trade: 'Striping',     company: 'TrafficWorks Texas', contractAmount: 240000,
+        insurance: { ...G('approved', null, '2024-11-20'), expiresOn: '2027-05-01' }, w9: G('approved', null, '2024-11-20'), coiOnFile: true },
+      { trade: 'Survey',       company: 'Cobb, Fendley &amp; Associates', contractAmount: 65000,
+        insurance: { ...G('approved', null, '2024-11-12'), expiresOn: '2026-12-31' }, w9: G('approved', null, '2024-11-12'), coiOnFile: true },
+    ],
+    inspections: [
+      { id: 'IR-201', date: '2025-09-30', inspector: 'T. Russell', category: 'final', result: 'info', reportUrl: '#', notes: 'Substantial completion walkthrough — punchlist 18 items' },
+      { id: 'IR-202', date: '2025-11-10', inspector: 'T. Russell', category: 'final', result: 'pass', reportUrl: '#', notes: 'Final acceptance walkthrough — all punchlist closed' },
+    ],
+    testing: {
+      concreteBreaks: [
+        { date: '2025-03-22', location: 'ADA ramp pours', result: 'pass', value: '3920 psi @ 28d' },
+      ],
+      densityTests: [
+        { date: '2025-04-12', location: 'Base course Sta. 14+00', result: 'pass', value: '96.8%' },
+        { date: '2025-06-04', location: 'Surface course Sta. 22+00', result: 'pass', value: '95.4%' },
+      ],
+    },
+    dailyReports: [],
+    weatherLog: [],
+    closeout: {
+      punchlist: { open: 0, closed: 18, total: 18, ageDays: 0 },
+      asBuilts: G('approved', '2025-11-04', '2025-11-12'),
+      recordDrawings: G('approved', '2025-11-15', '2025-11-22'),
+      conveyance: {
+        billOfSale: G('approved', '2025-11-18', '2025-11-22'),
+        easementsToMud: G('na'),
+      },
+      engineersCert: G('na', null, null, 'Paving project — N/A'),
+      finalTceqApproval: G('na'),
+      ownerAcceptance: G('approved', null, '2025-11-15', 'COH PW final acceptance letter 2025-11-15'),
+      warrantyStart: '2025-11-15', warrantyEnd: '2026-11-15',
+    },
+    team: [
+      { role: 'Engineer of Record', name: 'D. Patel, P.E.',  firm: 'Strata Engineering', email: 'dpatel@strataeng.com', phone: '713-784-4500' },
+      { role: 'Project Manager',    name: 'A. Stein',       firm: 'Knife River Houston', email: 'astein@kniferiver.com', phone: '281-456-9000' },
+      { role: 'Superintendent',     name: 'M. Ortiz',       firm: 'Knife River Houston', email: 'mortiz@kniferiver.com', phone: '281-456-9040' },
+      { role: 'Inspector',          name: 'T. Russell',     firm: 'Strata Engineering', email: 'trussell@strataeng.com', phone: '713-784-4530' },
+      { role: 'Owner Rep',          name: 'F. Nguyen',      firm: 'COH PW', email: 'fnguyen@houstontx.gov', phone: '832-393-9001' },
+    ],
+    photos: [],
+    bidTabBids: [
+      { bidder: 'Knife River Houston', total: 4600000, status: 'low' },
+      { bidder: 'D. L. Meacham',       total: 4790000, status: '' },
+      { bidder: 'Whitley Construction', total: 4880000, status: '' },
+      { bidder: 'Lecon Inc.',          total: 4980000, status: '' },
+      { bidder: 'Pepper-Lawson',       total: 5060000, status: 'high' },
+    ],
+  },
+]};
+
+/* ========== STRATA COLORS ========== */
+const STRATA = {
+  teal: '#40868b', tealDeep: '#2f6468', tealTint: '#e8f2f2',
+  gold: '#b37b28', goldSoft: '#d4982a', goldTint: '#f6ecd9',
+  navy: '#1B365D', navyDeep: '#0f2240', navyTint: '#e6eaf2',
+  slate: '#2e393e', muted: '#5b6b73', ink: '#1a2328',
+  green: '#2BAA70', red: '#a4451c',
+};
+const COLORS = [STRATA.teal, STRATA.gold, STRATA.navy, STRATA.tealDeep, STRATA.goldSoft,
+                STRATA.navyDeep, STRATA.green, STRATA.red, '#9b59b6', '#34495e'];
+Chart.defaults.color = STRATA.muted;
+Chart.defaults.borderColor = '#eef0f3';
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+
+/* ========== FORMATTERS ========== */
+const $$ = sel => document.querySelector(sel);
+const FMT = new Intl.NumberFormat('en-US');
+const fmt$ = v => v == null ? '—' : '$' + new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(v);
+const fmt$k = v => v == null ? '—' : v >= 1e6 ? '$' + (v/1e6).toFixed(2) + 'M' : v >= 1e3 ? '$' + (v/1e3).toFixed(0) + 'k' : fmt$(v);
+const fmtDate = v => v ? new Date(v).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
+const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+const pct = v => Math.round(v) + '%';
+
+const LIFECYCLE_LABEL = Object.fromEntries(LIFECYCLE_ORDER.map(s => [s.key, s.label]));
+
+const PAYAPP_STAGES = ['received', 'inspector_approved', 'mud_approved', 'submitted_to_client', 'paid'];
+const PAYAPP_STAGE_LABEL = {
+  received: 'Received', inspector_approved: 'Inspector', mud_approved: 'MUD',
+  submitted_to_client: 'Client', paid: 'Paid',
+};
+const stageIndex = s => PAYAPP_STAGES.indexOf(s);
+
+/* ========== GATE / RISK HELPERS ========== */
+function complianceSummary(p) {
+  const gates = [
+    p.preExec.bondsContractor.performance, p.preExec.bondsContractor.payment, p.preExec.bondsContractor.maintenance,
+    p.preExec.insuranceContractor.GL, p.preExec.insuranceContractor.auto, p.preExec.insuranceContractor.umbrella, p.preExec.insuranceContractor.wc,
+    p.preExec.swpppProposal, p.preExec.testingProposal, p.preExec.noiFiled,
+    p.preExec.permits.tceqPlansSpecs, p.preExec.permits.countyROW, p.preExec.easements,
+  ];
+  if (p.preExec.permits.usace404) gates.push(p.preExec.permits.usace404);
+  if (p.preExec.permits.encroachment) gates.push(p.preExec.permits.encroachment);
+  const counts = { approved: 0, pending: 0, submitted: 0, rejected: 0, na: 0 };
+  gates.forEach(g => counts[g.status] = (counts[g.status] || 0) + 1);
+  return counts;
+}
+function compliancePill(p) {
+  const c = complianceSummary(p);
+  if (c.rejected) return ['hot', 'Rejected'];
+  if (c.pending || c.submitted) return ['warn', (c.pending + c.submitted) + ' pending'];
+  return ['green', 'All clear'];
+}
+function riskFactors(p) {
+  const reasons = [];
+  // Rain days
+  const rainAllowance = Math.max(8, Math.round(p.contract.daysOriginal / 30));
+  if (p.contract.rainDaysCharged >= rainAllowance) reasons.push(`Rain ${p.contract.rainDaysCharged}/${rainAllowance}`);
+  // Open RFI aging
+  const oldRfis = p.rfis.filter(r => r.status === 'open' && daysBetween(r.submittedOn, TODAY) > 14);
+  if (oldRfis.length) reasons.push(`${oldRfis.length} RFIs > 14d`);
+  // CO exposure
+  const coExposure = p.changeOrders.reduce((s, c) => s + (c.status !== 'rejected' ? c.cost : 0), 0);
+  if (coExposure > p.contract.sumOriginal * 0.05) reasons.push(`COs > 5% (${pct(coExposure / p.contract.sumOriginal * 100)})`);
+  // Sub insurance expiring
+  const expSoon = p.subcontractors.filter(s => s.insurance.expiresOn && daysBetween(TODAY, s.insurance.expiresOn) < 30 && daysBetween(TODAY, s.insurance.expiresOn) >= 0);
+  if (expSoon.length) reasons.push(`${expSoon.length} subs COI expiring`);
+  // Schedule slip
+  if (p.contract.daysElapsed > 0) {
+    const expected = p.contract.daysElapsed / p.contract.daysCurrent * 100;
+    if (p.contract.pctComplete < expected - 8) reasons.push(`Schedule slip (${pct(expected)} expected vs ${pct(p.contract.pctComplete)} actual)`);
+  }
+  return reasons;
+}
+function riskPill(p) {
+  const r = riskFactors(p);
+  if (!r.length) return ['green', 'On track'];
+  if (r.length >= 3) return ['hot', `${r.length} risks`];
+  return ['warn', `${r.length} flag${r.length>1?'s':''}`];
+}
+
+/* ========== ROUTING ========== */
+function route() {
+  const hash = location.hash || '#portfolio';
+  if (hash.startsWith('#project/')) {
+    const id = hash.slice('#project/'.length);
+    const p = DATA.projects.find(x => x.id === id);
+    if (p) { showDetail(p); return; }
+  }
+  showPortfolio();
+}
+window.addEventListener('hashchange', route);
+
+function showPortfolio() {
+  $$('#view-portfolio').classList.add('active');
+  $$('#view-detail').classList.remove('active');
+  $$('#backBtn').style.display = 'none';
+  $$('#hdrEyebrow').textContent = 'Project Tracker';
+  $$('#hdrTitle').innerHTML = 'Civil Construction <span class="light">Portfolio</span>';
+  $$('#hdrSub').innerHTML = `${DATA.projects.length} active projects<span class="dot">·</span>Civil project execution data<span class="dot">·</span>as of ${fmtDate(TODAY)}<span class="dot">·</span><strong>Mock</strong>`;
+}
+function showDetail(p) {
+  $$('#view-portfolio').classList.remove('active');
+  $$('#view-detail').classList.add('active');
+  $$('#backBtn').style.display = '';
+  $$('#hdrEyebrow').textContent = 'Project Detail';
+  $$('#hdrTitle').innerHTML = `${p.owner.name} <span class="light">/ ${p.scope.toUpperCase()}</span>`;
+  $$('#hdrSub').innerHTML = `Engineer: <strong>${p.engineer}</strong><span class="dot">·</span>Contractor: ${p.contractor}<span class="dot">·</span>Lifecycle: ${LIFECYCLE_LABEL[p.lifecycle]}`;
+  renderDetail(p);
+}
+$$('#backBtn').addEventListener('click', () => { location.hash = ''; });
+
+/* ========== PORTFOLIO ========== */
+function renderPortfolio() {
+  // KPIs
+  const all = DATA.projects;
+  const active = all.filter(p => !['advertising','bidding','bid_review'].includes(p.lifecycle));
+  const totalContract = all.reduce((s, p) => s + p.contract.sumCurrent, 0);
+  const billed = all.reduce((s, p) => s + p.contract.workToDate, 0);
+  const openRfis = all.reduce((s, p) => s + p.rfis.filter(r => r.status === 'open').length, 0);
+  const openCOs = all.reduce((s, p) => s + p.changeOrders.filter(c => ['draft','submitted','owner_review'].includes(c.status)).length, 0);
+  const avgPct = Math.round(active.reduce((s, p) => s + p.contract.pctComplete, 0) / Math.max(1, active.length));
+
+  const kpis = [
+    { label: 'Active projects', value: all.length, sub: `${active.length} in execution` },
+    { label: 'Total contract value', value: fmt$k(totalContract), sub: 'Current contract sums', variant: 'navy' },
+    { label: 'Billed to date', value: fmt$k(billed), sub: pct(billed / totalContract * 100) + ' of portfolio', variant: 'gold' },
+    { label: 'Open RFIs', value: openRfis, sub: 'Across all projects' },
+    { label: 'Pending COs', value: openCOs, sub: 'Owner / EOR review', variant: 'gold' },
+    { label: 'Avg % complete', value: pct(avgPct), sub: active.length + ' active projects', variant: 'green' },
+  ];
+  $$('#kpi-portfolio').innerHTML = kpis.map(k =>
+    `<div class="kpi ${k.variant||''}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="sub">${k.sub}</div></div>`
+  ).join('');
+
+  // Portfolio table
+  const rows = all.map(p => {
+    const openRfi = p.rfis.filter(r => r.status === 'open').length;
+    const lastPa = p.payApps[p.payApps.length - 1];
+    const paLabel = lastPa ? `#${lastPa.no} · ${PAYAPP_STAGE_LABEL[lastPa.status]}` : 'No pay apps yet';
+    const [cClass, cLabel] = compliancePill(p);
+    const [rClass, rLabel] = riskPill(p);
+    return `<tr class="clickable" data-id="${p.id}">
+      <td><div class="name">${p.name}</div><div class="meta">${p.id}</div></td>
+      <td>${p.owner.name}<div class="meta">${p.owner.type}</div></td>
+      <td><span class="pill muted">${p.scope}</span></td>
+      <td><span class="pill ${p.lifecycle === 'closeout' ? 'green' : 'navy'}">${LIFECYCLE_LABEL[p.lifecycle]}</span></td>
+      <td><div class="progress-mini"><div class="progress"><div class="bar ${p.contract.pctComplete>=100?'green':p.contract.pctComplete>=80?'gold':''}" style="width:${p.contract.pctComplete}%"></div></div><div class="pct">${pct(p.contract.pctComplete)}</div></div></td>
+      <td class="num">${fmt$k(p.contract.sumCurrent)}</td>
+      <td class="num">${p.contract.daysRemaining}/${p.contract.daysCurrent}</td>
+      <td class="num">${openRfi}</td>
+      <td>${paLabel}</td>
+      <td><span class="pill ${cClass}">${cLabel}</span></td>
+      <td><span class="pill ${rClass}">${rLabel}</span></td>
+    </tr>`;
+  }).join('');
+  $$('#tbl-portfolio').innerHTML =
+    `<thead><tr>
+      <th>Project</th><th>Owner</th><th>Scope</th><th>Stage</th>
+      <th>% Complete</th><th>Contract</th><th>Days rem/total</th>
+      <th>Open RFIs</th><th>Pay app</th><th>Compliance</th><th>Risk</th>
+    </tr></thead><tbody>${rows}</tbody>`;
+  $$('#tbl-portfolio').querySelectorAll('tr.clickable').forEach(tr => {
+    tr.addEventListener('click', () => { location.hash = '#project/' + tr.dataset.id; });
+  });
+
+  // Chart: portfolio progress (bar planned vs actual per project)
+  const labels = all.map(p => p.name.split('—')[0].trim().split(' ').slice(0,3).join(' '));
+  new Chart($$('#ch-portfolio-progress'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Planned %', data: all.map(p => p.contract.daysElapsed > 0 ? Math.min(100, Math.round(p.contract.daysElapsed / p.contract.daysCurrent * 100)) : 0), backgroundColor: STRATA.navyTint, borderColor: STRATA.navy, borderWidth: 1 },
+        { label: 'Actual %',  data: all.map(p => p.contract.pctComplete), backgroundColor: STRATA.teal },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } } },
+  });
+
+  // Chart: pay-app funnel (count of pay apps at each stage across portfolio)
+  const funnelCounts = PAYAPP_STAGES.map(stg =>
+    all.reduce((s, p) => s + p.payApps.filter(pa => pa.status === stg).length, 0)
+  );
+  new Chart($$('#ch-payapp-funnel'), {
+    type: 'bar',
+    data: { labels: PAYAPP_STAGES.map(s => PAYAPP_STAGE_LABEL[s]),
+            datasets: [{ label: 'Pay apps', data: funnelCounts, backgroundColor: [STRATA.tealTint, STRATA.teal, STRATA.tealDeep, STRATA.gold, STRATA.green] }] },
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } },
+  });
+
+  // Chart: RFI + CO per project
+  new Chart($$('#ch-rfi-co'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Open RFIs', data: all.map(p => p.rfis.filter(r => r.status === 'open').length), backgroundColor: STRATA.gold },
+        { label: 'Pending COs', data: all.map(p => p.changeOrders.filter(c => c.status !== 'approved' && c.status !== 'rejected').length), backgroundColor: STRATA.navy },
+        { label: 'Approved COs', data: all.map(p => p.changeOrders.filter(c => c.status === 'approved').length), backgroundColor: STRATA.tealTint },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: false }, y: { beginAtZero: true, ticks: { stepSize: 1 } } } },
+  });
+
+  // Chart: rain days vs allowance
+  new Chart($$('#ch-rain'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Rain days charged', data: all.map(p => p.contract.rainDaysCharged), backgroundColor: STRATA.teal },
+        { type: 'line', label: 'Allowance', data: all.map(p => Math.max(8, Math.round(p.contract.daysOriginal / 30))), borderColor: STRATA.gold, backgroundColor: 'transparent', pointBackgroundColor: STRATA.gold, tension: 0 },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } },
+  });
+}
+
+/* ========== DETAIL ========== */
+function renderDetail(p) {
+  // Lifecycle ribbon
+  const currentIdx = LIFECYCLE_ORDER.findIndex(s => s.key === p.lifecycle);
+  $$('#proj-name').textContent = p.name;
+  $$('#proj-meta').innerHTML =
+    `Owner: <strong>${p.owner.name}</strong> (${p.owner.type})` +
+    `<span class="dot">·</span>Engineer: ${p.engineer}` +
+    `<span class="dot">·</span>Contractor: ${p.contractor}` +
+    `<span class="dot">·</span>Scope: ${p.scope}` +
+    (p.contract.ntpDate ? `<span class="dot">·</span>NTP: ${fmtDate(p.contract.ntpDate)}` : '');
+  $$('#proj-lifecycle').innerHTML = LIFECYCLE_ORDER.map((s, i) => {
+    const cls = i < currentIdx ? 'done' : i === currentIdx ? 'current' : '';
+    return `<div class="lifecycle-step ${cls}">${s.label}</div>`;
+  }).join('');
+
+  // Tab switching
+  const tabs = $$('#proj-tabs');
+  tabs.onclick = e => {
+    const btn = e.target.closest('button[data-tab]');
+    if (!btn) return;
+    tabs.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('#view-detail section.pane').forEach(s => s.classList.toggle('active', s.id === 'pane-' + btn.dataset.tab));
+  };
+  // Reset active to overview
+  tabs.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.tab === 'overview'));
+  document.querySelectorAll('#view-detail section.pane').forEach(s => s.classList.toggle('active', s.id === 'pane-overview'));
+
+  // Destroy any previous charts to avoid canvas reuse errors
+  Chart.helpers.each(Chart.instances, c => c.destroy());
+
+  renderOverview(p);
+  renderBid(p);
+  renderSchedule(p);
+  renderFinancials(p);
+  renderDocuments(p);
+  renderCompliance(p);
+  renderSubs(p);
+  renderField(p);
+  renderCloseout(p);
+  renderTeam(p);
+}
+
+function gatePill(g) {
+  if (!g) return '<span class="pill muted">—</span>';
+  const map = { approved: ['green','Approved'], submitted: ['warn','Submitted'], pending: ['warn','Pending'], rejected: ['hot','Rejected'], na: ['muted','N/A'] };
+  const [cls, label] = map[g.status] || ['muted', g.status];
+  return `<span class="pill ${cls}">${label}</span>`;
+}
+function gateRow(label, g, extra) {
+  if (!g) g = { status: 'na' };
+  return `<tr class="gate-row">
+    <td><div class="gate-label">${label}</div>${extra ? `<div class="gate-sub">${extra}</div>` : ''}</td>
+    <td>${gatePill(g)}</td>
+    <td>${fmtDate(g.receivedOn)}</td>
+    <td>${fmtDate(g.approvedOn)}</td>
+    <td>${g.notes || ''}</td>
+  </tr>`;
+}
+
+/* ----- Tab: Overview ----- */
+function renderOverview(p) {
+  const open5kpis = [
+    { label: 'Open RFIs',     value: p.rfis.filter(r => r.status === 'open').length, variant: 'gold' },
+    { label: 'Pending COs',   value: p.changeOrders.filter(c => !['approved','rejected'].includes(c.status)).length, variant: 'gold' },
+    { label: 'Last pay app',  value: p.payApps.length ? `#${p.payApps[p.payApps.length-1].no}` : '—',
+      sub: p.payApps.length ? PAYAPP_STAGE_LABEL[p.payApps[p.payApps.length-1].status] : 'None yet' },
+    { label: 'Rain days',     value: `${p.contract.rainDaysCharged}/${Math.max(8, Math.round(p.contract.daysOriginal/30))}`, sub: 'Charged / allowance' },
+    { label: 'Compliance',    value: complianceSummary(p).approved, sub: 'Gates approved', variant: 'green' },
+  ];
+  const risks = riskFactors(p);
+  const planned = p.contract.daysElapsed > 0 ? Math.min(100, Math.round(p.contract.daysElapsed / p.contract.daysCurrent * 100)) : 0;
+  $$('#pane-overview').innerHTML = `
+    <div class="kpi-row">
+      ${open5kpis.map(k => `<div class="kpi ${k.variant||''}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="sub">${k.sub || ''}</div></div>`).join('')}
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Project vitals</h3>
+        <div class="stat-grid">
+          <div class="stat"><div class="label">Contract sum (current)</div><div class="value">${fmt$k(p.contract.sumCurrent)}</div><div class="sub">Original ${fmt$k(p.contract.sumOriginal)}</div></div>
+          <div class="stat"><div class="label">Days</div><div class="value">${p.contract.daysElapsed}/${p.contract.daysCurrent}</div><div class="sub">${p.contract.daysRemaining} remaining</div></div>
+          <div class="stat"><div class="label">Work to date</div><div class="value">${fmt$k(p.contract.workToDate)}</div><div class="sub">${fmt$k(p.contract.workRemaining)} remaining</div></div>
+          <div class="stat"><div class="label">Sub. completion</div><div class="value" style="font-size:13px">${fmtDate(p.contract.substantialCompletionDate)}</div><div class="sub">${p.contract.finalAcceptanceDate ? 'Final: ' + fmtDate(p.contract.finalAcceptanceDate) : 'Final pending'}</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Progress (actual vs planned)</h3>
+        <div class="hint">Planned tracks elapsed-days; actual is contractor-reported.</div>
+        <div style="margin-top:14px">
+          <div class="section-eyebrow">Planned ${pct(planned)}</div>
+          <div class="progress"><div class="bar gold" style="width:${planned}%"></div></div>
+        </div>
+        <div style="margin-top:14px">
+          <div class="section-eyebrow" style="color:var(--brand-teal)">Actual ${pct(p.contract.pctComplete)}</div>
+          <div class="progress"><div class="bar" style="width:${p.contract.pctComplete}%"></div></div>
+        </div>
+        ${risks.length ? `<div style="margin-top:14px"><div class="section-eyebrow" style="color:var(--red)">Risks (${risks.length})</div><div style="font-size:12px;line-height:1.7">${risks.map(r => `<span class="pill warn">${r}</span>`).join(' ')}</div></div>` : '<div style="margin-top:14px"><span class="pill green">No active risk flags</span></div>'}
+      </div>
+    </div>
+  `;
+}
+
+/* ----- Tab: Bid & Award ----- */
+function renderBid(p) {
+  const bidRows = (p.bidTabBids || []).map(b => `
+    <tr><td>${b.bidder} ${b.status==='low'?'<span class="pill green">LOW</span>':''}${b.status==='high'?'<span class="pill hot">HIGH</span>':''}</td>
+    <td class="num">${fmt$(b.total)}</td>
+    <td class="num">${p.bidsReceived.lowBid ? '+' + ((b.total - p.bidsReceived.lowBid) / p.bidsReceived.lowBid * 100).toFixed(1) + '%' : '—'}</td></tr>`).join('');
+  $$('#pane-bid').innerHTML = `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Advertising &amp; bid opening</h3>
+        <div class="stat-grid">
+          <div class="stat"><div class="label">Advertised on</div><div class="value" style="font-size:14px">${fmtDate(p.advertising.advertisedOn)}</div></div>
+          <div class="stat"><div class="label">Addenda</div><div class="value">${p.advertising.addendaCount}</div></div>
+          <div class="stat"><div class="label">Bids opened</div><div class="value" style="font-size:14px">${fmtDate(p.bidsReceived.openedOn)}</div><div class="sub">${p.bidsReceived.count} bid${p.bidsReceived.count===1?'':'s'} received</div></div>
+          <div class="stat"><div class="label">Low bid</div><div class="value">${fmt$k(p.bidsReceived.lowBid)}</div><div class="sub">${p.bidsReceived.lowBidder || '—'}</div></div>
+          <div class="stat"><div class="label">Spread</div><div class="value">${p.bidsReceived.spreadPct ? p.bidsReceived.spreadPct + '%' : '—'}</div><div class="sub">Low vs high</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Bid tab → Award handoff</h3>
+        <div class="stat-grid">
+          <div class="stat"><div class="label">Bid tab prepared</div><div class="value" style="font-size:14px">${fmtDate(p.bidTab.preparedOn)}</div><div class="sub">${p.bidTab.preparedBy || ''}</div></div>
+          <div class="stat"><div class="label">Client reviewed</div><div class="value" style="font-size:14px">${fmtDate(p.clientReview.reviewedOn)}</div><div class="sub">${p.clientReview.recommendation ? 'Rec: ' + p.clientReview.recommendation : ''}</div></div>
+          <div class="stat"><div class="label">MUD/Owner award</div><div class="value" style="font-size:14px">${fmtDate(p.mudAward.awardedOn)}</div><div class="sub">${p.mudAward.resolutionNo || (p.mudAward.boardMeeting ? 'Board: ' + fmtDate(p.mudAward.boardMeeting) : '—')}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Bid tab</h3>
+      ${bidRows ? `<div class="table-wrap"><table><thead><tr><th>Bidder</th><th class="num">Total</th><th class="num">Δ vs low</th></tr></thead><tbody>${bidRows}</tbody></table></div>` : '<div class="empty">No bids opened yet</div>'}
+    </div>
+  `;
+}
+
+/* ----- Tab: Schedule ----- */
+function renderSchedule(p) {
+  const milestones = [
+    { label: 'NTP',                 date: p.contract.ntpDate },
+    { label: 'Substantial completion', date: p.contract.substantialCompletionDate },
+    { label: 'Final acceptance',    date: p.contract.finalAcceptanceDate },
+  ];
+  const rainRows = p.weatherLog.map(w => `<tr><td>${fmtDate(w.date)}</td><td class="num">${w.rainIn.toFixed(1)}"</td><td>${w.chargedAsRainDay ? '<span class="pill warn">Charged</span>' : '<span class="pill muted">Uncharged</span>'}</td></tr>`).join('');
+  const teRows = p.contract.timeExtensions.map(t => `<tr><td>${fmtDate(t.approvedOn)}</td><td class="num">+${t.days} d</td><td>${t.reason}</td></tr>`).join('');
+  $$('#pane-schedule').innerHTML = `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Schedule vitals</h3>
+        <div class="stat-grid">
+          <div class="stat"><div class="label">Contract days (orig/current)</div><div class="value">${p.contract.daysOriginal} / ${p.contract.daysCurrent}</div></div>
+          <div class="stat"><div class="label">Days elapsed</div><div class="value">${p.contract.daysElapsed}</div><div class="sub">${p.contract.daysRemaining} remaining</div></div>
+          <div class="stat"><div class="label">Rain days</div><div class="value">${p.contract.rainDaysCharged} / ${Math.max(8, Math.round(p.contract.daysOriginal/30))}</div><div class="sub">Charged / allowance</div></div>
+          <div class="stat"><div class="label">Time extensions</div><div class="value">${p.contract.timeExtensions.reduce((s,t) => s + t.days, 0)} d</div><div class="sub">${p.contract.timeExtensions.length} approved</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Milestones</h3>
+        <div class="table-wrap" style="max-height:280px"><table>
+          <thead><tr><th>Milestone</th><th>Date</th></tr></thead>
+          <tbody>${milestones.map(m => `<tr><td>${m.label}</td><td>${fmtDate(m.date)}</td></tr>`).join('')}</tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Rain day log</h3>
+        ${rainRows ? `<div class="table-wrap" style="max-height:280px"><table><thead><tr><th>Date</th><th class="num">Rain (in)</th><th>Charged?</th></tr></thead><tbody>${rainRows}</tbody></table></div>` : '<div class="empty">No rain events logged</div>'}
+      </div>
+      <div class="card">
+        <h3>Time extension requests</h3>
+        ${teRows ? `<div class="table-wrap" style="max-height:280px"><table><thead><tr><th>Approved</th><th class="num">Days</th><th>Reason</th></tr></thead><tbody>${teRows}</tbody></table></div>` : '<div class="empty">No time extensions</div>'}
+      </div>
+    </div>
+  `;
+}
+
+/* ----- Tab: Financials ----- */
+function renderFinancials(p) {
+  const retainageHeld = p.payApps.reduce((s, pa) => s + pa.retainageHeld, 0);
+  const approvedCOs = p.changeOrders.filter(c => c.status === 'approved');
+  const pendingCOs = p.changeOrders.filter(c => !['approved','rejected'].includes(c.status));
+  const billed = p.contract.workToDate;
+  const paid = p.payApps.filter(pa => pa.status === 'paid').reduce((s, pa) => s + (pa.amountApproved || pa.amountRequested), 0);
+  const balToBill = p.contract.sumCurrent - billed;
+  const expectedPct = p.contract.daysElapsed > 0 ? p.contract.daysElapsed / p.contract.daysCurrent : 0;
+  const spi = p.contract.pctComplete > 0 ? (p.contract.pctComplete / 100) / Math.max(expectedPct, 0.001) : null;
+  const earnedValue = p.contract.sumOriginal * (p.contract.pctComplete / 100);
+  const cpi = billed > 0 ? earnedValue / billed : null;
+
+  const paRows = p.payApps.map(pa => {
+    const idx = stageIndex(pa.status);
+    const steps = PAYAPP_STAGES.map((s, i) =>
+      `<div class="step ${i < idx ? 'done' : i === idx ? (pa.status === 'paid' ? 'done' : 'current') : ''}"></div>`).join('');
+    return `<tr>
+      <td>#${pa.no}</td>
+      <td>${fmtDate(pa.periodStart)} – ${fmtDate(pa.periodEnd)}</td>
+      <td class="num">${fmt$(pa.amountRequested)}</td>
+      <td class="num">${fmt$(pa.retainageHeld)}</td>
+      <td><div class="pa-status">${steps}<span class="label">${PAYAPP_STAGE_LABEL[pa.status]}</span></div></td>
+      <td>${fmtDate(pa.paidOn || pa.submittedClientOn || pa.mudApprovedOn || pa.inspectorApprovedOn || pa.receivedOn)}</td>
+      <td>${pa.lienReleasesAttached ? '<span class="pill green">Yes</span>' : '<span class="pill warn">No</span>'}</td>
+    </tr>`;
+  }).join('');
+
+  const coRows = p.changeOrders.map(c => `<tr>
+    <td>#${c.no}</td>
+    <td>${c.reason}</td>
+    <td class="num">${fmt$(c.cost)}</td>
+    <td class="num">${c.daysImpact > 0 ? '+' + c.daysImpact + ' d' : '—'}</td>
+    <td><span class="pill ${c.status==='approved'?'green':c.status==='rejected'?'hot':'warn'}">${c.status.replace(/_/g,' ')}</span></td>
+    <td>${fmtDate(c.approvedOn)}</td>
+  </tr>`).join('');
+
+  $$('#pane-financials').innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi navy"><div class="label">Contract sum (current)</div><div class="value">${fmt$k(p.contract.sumCurrent)}</div><div class="sub">Original ${fmt$k(p.contract.sumOriginal)}</div></div>
+      <div class="kpi"><div class="label">Billed to date</div><div class="value">${fmt$k(billed)}</div><div class="sub">${pct(billed/p.contract.sumCurrent*100)} of current</div></div>
+      <div class="kpi green"><div class="label">Paid to date</div><div class="value">${fmt$k(paid)}</div><div class="sub">${p.payApps.filter(pa=>pa.status==='paid').length} pay apps</div></div>
+      <div class="kpi gold"><div class="label">Retainage held</div><div class="value">${fmt$k(retainageHeld)}</div><div class="sub">5% standard</div></div>
+      <div class="kpi"><div class="label">Balance to bill</div><div class="value">${fmt$k(balToBill)}</div><div class="sub">${fmt$k(p.contract.workRemaining)} work remaining</div></div>
+      <div class="kpi ${spi && spi < 0.92 ? 'red' : 'green'}"><div class="label">SPI</div><div class="value">${spi ? spi.toFixed(2) : '—'}</div><div class="sub">Schedule perf. idx</div></div>
+      <div class="kpi ${cpi && cpi < 0.97 ? 'red' : 'green'}"><div class="label">CPI</div><div class="value">${cpi ? cpi.toFixed(2) : '—'}</div><div class="sub">Cost perf. idx</div></div>
+    </div>
+    <div class="card">
+      <h3>Pay applications</h3>
+      ${paRows ? `<div class="table-wrap"><table><thead><tr><th>#</th><th>Period</th><th class="num">Requested</th><th class="num">Retainage</th><th>Status</th><th>Last action</th><th>Lien rel.</th></tr></thead><tbody>${paRows}</tbody></table></div>` : '<div class="empty">No pay apps submitted yet</div>'}
+    </div>
+    <div class="card">
+      <h3>Change orders</h3>
+      <div class="hint">Approved: ${approvedCOs.length} · Pending: ${pendingCOs.length} · Total approved $: ${fmt$k(approvedCOs.reduce((s,c)=>s+c.cost,0))}</div>
+      ${coRows ? `<div class="table-wrap"><table><thead><tr><th>#</th><th>Reason</th><th class="num">Cost</th><th class="num">Days</th><th>Status</th><th>Approved</th></tr></thead><tbody>${coRows}</tbody></table></div>` : '<div class="empty">No change orders</div>'}
+    </div>
+  `;
+}
+
+/* ----- Tab: Documents ----- */
+function renderDocuments(p) {
+  const rfiRows = p.rfis.map(r => {
+    const age = r.status === 'open' ? daysBetween(r.submittedOn, TODAY) : daysBetween(r.submittedOn, r.respondedOn);
+    const ageCls = r.status === 'open' && age > 14 ? 'hot' : r.status === 'open' && age > 7 ? 'warn' : 'muted';
+    return `<tr>
+      <td>RFI #${r.no}</td><td>${r.subject}</td>
+      <td>${fmtDate(r.submittedOn)}</td>
+      <td><span class="pill ${ageCls}">${age} d</span></td>
+      <td><span class="pill ${r.status==='open'?'gold':'green'}">${r.status}</span></td>
+      <td>${r.impact !== 'none' ? '<span class="pill warn">' + r.impact + '</span>' : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  const subStatusMap = { submitted: 'warn', approved: 'green', approved_as_noted: 'green', rejected: 'hot', resubmit_required: 'hot' };
+  const subRows = p.submittals.map(s => `<tr>
+    <td>${s.no}</td><td>${s.specSection}</td><td>${s.subject}</td>
+    <td>${fmtDate(s.submittedOn)}</td><td>${fmtDate(s.reviewedOn)}</td>
+    <td><span class="pill ${subStatusMap[s.status]||'muted'}">${s.status.replace(/_/g,' ')}</span></td>
+    <td class="num">${s.turnaroundDays != null ? s.turnaroundDays + ' d' : '—'}</td>
+  </tr>`).join('');
+
+  const fdRows = p.fieldDirectives.map(f => `<tr>
+    <td>#${f.no}</td><td>${fmtDate(f.date)}</td><td>${f.description}</td>
+    <td class="num">${fmt$(f.estCost)}</td>
+    <td>${f.convertedToCO ? '<span class="pill gold">→ CO #' + f.convertedToCO + '</span>' : '<span class="pill warn">Open</span>'}</td>
+  </tr>`).join('');
+
+  $$('#pane-documents').innerHTML = `
+    <div class="card">
+      <h3>RFIs (${p.rfis.length})</h3>
+      ${rfiRows ? `<div class="table-wrap"><table><thead><tr><th>#</th><th>Subject</th><th>Submitted</th><th>Age</th><th>Status</th><th>Impact</th></tr></thead><tbody>${rfiRows}</tbody></table></div>` : '<div class="empty">No RFIs yet</div>'}
+    </div>
+    <div class="card">
+      <h3>Submittal log (${p.submittals.length})</h3>
+      ${subRows ? `<div class="table-wrap"><table><thead><tr><th>#</th><th>Spec §</th><th>Subject</th><th>Submitted</th><th>Reviewed</th><th>Status</th><th class="num">Turn.</th></tr></thead><tbody>${subRows}</tbody></table></div>` : '<div class="empty">No submittals yet</div>'}
+    </div>
+    <div class="card">
+      <h3>Field directives / CCDs (${p.fieldDirectives.length})</h3>
+      <div class="hint">Precursors to formal change orders</div>
+      ${fdRows ? `<div class="table-wrap"><table><thead><tr><th>#</th><th>Date</th><th>Description</th><th class="num">Est. $</th><th>Outcome</th></tr></thead><tbody>${fdRows}</tbody></table></div>` : '<div class="empty">No field directives</div>'}
+    </div>
+  `;
+}
+
+/* ----- Tab: Compliance ----- */
+function renderCompliance(p) {
+  const ic = p.preExec.insuranceContractor;
+  const icExpSoon = ic.expiresOn && daysBetween(TODAY, ic.expiresOn) < 30 && daysBetween(TODAY, ic.expiresOn) >= 0;
+  $$('#pane-compliance').innerHTML = `
+    <div class="card">
+      <h3>Contractor bonds</h3>
+      <div class="table-wrap"><table class="gate-matrix"><thead><tr><th>Gate</th><th>Status</th><th>Received</th><th>Approved</th><th>Notes</th></tr></thead><tbody>
+        ${gateRow('Performance bond', p.preExec.bondsContractor.performance)}
+        ${gateRow('Payment bond', p.preExec.bondsContractor.payment)}
+        ${gateRow('Maintenance bond', p.preExec.bondsContractor.maintenance, 'Required at substantial completion')}
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <h3>Contractor insurance ${icExpSoon ? '<span class="pill warn">Expires ' + fmtDate(ic.expiresOn) + '</span>' : ic.expiresOn ? '<span class="pill muted">Expires ' + fmtDate(ic.expiresOn) + '</span>' : ''}</h3>
+      <div class="table-wrap"><table class="gate-matrix"><thead><tr><th>Coverage</th><th>Status</th><th>Received</th><th>Approved</th><th>Notes</th></tr></thead><tbody>
+        ${gateRow('General Liability', ic.GL)}
+        ${gateRow('Auto', ic.auto)}
+        ${gateRow('Umbrella', ic.umbrella)}
+        ${gateRow("Workers' Comp", ic.wc)}
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <h3>Pre-construction submissions</h3>
+      <div class="table-wrap"><table class="gate-matrix"><thead><tr><th>Item</th><th>Status</th><th>Received</th><th>Approved</th><th>Notes</th></tr></thead><tbody>
+        ${gateRow('SWPPP proposal', p.preExec.swpppProposal)}
+        ${gateRow('Testing proposal', p.preExec.testingProposal)}
+        ${gateRow('NOI filed (TPDES)', p.preExec.noiFiled, p.preExec.noiFiled.confirmationNo ? 'Confirmation: ' + p.preExec.noiFiled.confirmationNo : '')}
+        <tr class="gate-row"><td><div class="gate-label">Pre-construction meeting</div></td><td>${p.preExec.preconMeeting ? '<span class="pill green">Held</span>' : '<span class="pill warn">Pending</span>'}</td><td>—</td><td>${fmtDate(p.preExec.preconMeeting)}</td><td></td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <h3>Permits &amp; easements</h3>
+      <div class="table-wrap"><table class="gate-matrix"><thead><tr><th>Item</th><th>Status</th><th>Received</th><th>Approved</th><th>Notes</th></tr></thead><tbody>
+        ${gateRow('TCEQ Plans &amp; Specs', p.preExec.permits.tceqPlansSpecs)}
+        ${gateRow('USACE 404 permit', p.preExec.permits.usace404)}
+        ${gateRow('County / city ROW', p.preExec.permits.countyROW)}
+        ${gateRow('Encroachment / utility permits', p.preExec.permits.encroachment)}
+        ${gateRow('Easements / ROW acquisition', p.preExec.easements)}
+      </tbody></table></div>
+    </div>
+  `;
+}
+
+/* ----- Tab: Subs ----- */
+function renderSubs(p) {
+  const rows = p.subcontractors.map(s => {
+    const expDays = s.insurance.expiresOn ? daysBetween(TODAY, s.insurance.expiresOn) : null;
+    const expCls = expDays != null && expDays < 30 && expDays >= 0 ? 'hot' : expDays != null && expDays < 90 ? 'warn' : 'green';
+    return `<tr>
+      <td>${s.trade}</td>
+      <td>${s.company}</td>
+      <td class="num">${fmt$(s.contractAmount)}</td>
+      <td>${gatePill(s.insurance)} ${s.insurance.expiresOn ? `<span class="pill ${expCls}">exp ${fmtDate(s.insurance.expiresOn)}</span>` : ''}</td>
+      <td>${gatePill(s.w9)}</td>
+      <td>${s.coiOnFile ? '<span class="pill green">Yes</span>' : '<span class="pill hot">Missing</span>'}</td>
+    </tr>`;
+  }).join('');
+  $$('#pane-subs').innerHTML = `
+    <div class="card">
+      <h3>Subcontractor list (${p.subcontractors.length})</h3>
+      <div class="hint">Insurance expiring within 30 days flagged in red</div>
+      ${rows ? `<div class="table-wrap"><table><thead><tr><th>Trade</th><th>Company</th><th class="num">Contract $</th><th>Insurance</th><th>W-9</th><th>COI on file</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<div class="empty">No subs yet</div>'}
+    </div>
+  `;
+}
+
+/* ----- Tab: Field & QA ----- */
+function renderField(p) {
+  const passFail = p.inspections.reduce((acc, i) => { acc[i.result] = (acc[i.result] || 0) + 1; return acc; }, {});
+  const inspRows = p.inspections.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(i => `<tr>
+    <td>${i.id}</td><td>${fmtDate(i.date)}</td><td>${i.inspector}</td>
+    <td><span class="pill muted">${i.category.replace(/_/g,' ')}</span></td>
+    <td><span class="pill ${i.result==='pass'?'green':i.result==='fail'?'hot':'navy'}">${i.result}</span></td>
+    <td>${i.notes}</td>
+    <td><a href="${i.reportUrl}">PDF</a></td>
+  </tr>`).join('');
+  const t = p.testing;
+  const concreteRows = (t.concreteBreaks || []).map(x => `<tr><td>${fmtDate(x.date)}</td><td>${x.location}</td><td><span class="pill ${x.result==='pass'?'green':'hot'}">${x.result}</span></td><td>${x.value}</td></tr>`).join('');
+  const densityRows = (t.densityTests || []).map(x => `<tr><td>${fmtDate(x.date)}</td><td>${x.location}</td><td><span class="pill ${x.result==='pass'?'green':'hot'}">${x.result}</span></td><td>${x.value}</td></tr>`).join('');
+  const drRows = p.dailyReports.map(d => `<tr><td>${fmtDate(d.date)}</td><td class="num">${d.crewCount}</td><td>${d.weather}, ${d.tempF}°F</td><td>${d.workPerformed}</td><td>${d.delays || ''}</td></tr>`).join('');
+
+  $$('#pane-field').innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi green"><div class="label">Inspections passed</div><div class="value">${passFail.pass || 0}</div></div>
+      <div class="kpi red"><div class="label">Inspections failed</div><div class="value">${passFail.fail || 0}</div></div>
+      <div class="kpi navy"><div class="label">Pressure test</div><div class="value">${t.pressureTest ? t.pressureTest.result.toUpperCase() : '—'}</div><div class="sub">${t.pressureTest ? fmtDate(t.pressureTest.date) : 'Not yet'}</div></div>
+      <div class="kpi navy"><div class="label">Bacterial test</div><div class="value">${t.bacterialTest ? t.bacterialTest.result.toUpperCase() : '—'}</div><div class="sub">${t.bacterialTest ? fmtDate(t.bacterialTest.date) : 'Not yet'}</div></div>
+    </div>
+    <div class="card">
+      <h3>Inspection report repository (${p.inspections.length})</h3>
+      ${inspRows ? `<div class="table-wrap"><table><thead><tr><th>ID</th><th>Date</th><th>Inspector</th><th>Category</th><th>Result</th><th>Notes</th><th>Report</th></tr></thead><tbody>${inspRows}</tbody></table></div>` : '<div class="empty">No inspections yet</div>'}
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Concrete breaks (${(t.concreteBreaks || []).length})</h3>
+        ${concreteRows ? `<div class="table-wrap" style="max-height:280px"><table><thead><tr><th>Date</th><th>Location</th><th>Result</th><th>Value</th></tr></thead><tbody>${concreteRows}</tbody></table></div>` : '<div class="empty">None</div>'}
+      </div>
+      <div class="card">
+        <h3>Density tests (${(t.densityTests || []).length})</h3>
+        ${densityRows ? `<div class="table-wrap" style="max-height:280px"><table><thead><tr><th>Date</th><th>Location</th><th>Result</th><th>Value</th></tr></thead><tbody>${densityRows}</tbody></table></div>` : '<div class="empty">None</div>'}
+      </div>
+    </div>
+    <div class="card">
+      <h3>Daily reports</h3>
+      ${drRows ? `<div class="table-wrap" style="max-height:280px"><table><thead><tr><th>Date</th><th class="num">Crew</th><th>Weather</th><th>Work performed</th><th>Delays</th></tr></thead><tbody>${drRows}</tbody></table></div>` : '<div class="empty">No daily reports</div>'}
+    </div>
+  `;
+}
+
+/* ----- Tab: Closeout ----- */
+function renderCloseout(p) {
+  const co = p.closeout;
+  const pl = co.punchlist;
+  $$('#pane-closeout').innerHTML = `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Punchlist</h3>
+        <div class="stat-grid">
+          <div class="stat"><div class="label">Open</div><div class="value">${pl.open}</div></div>
+          <div class="stat"><div class="label">Closed</div><div class="value">${pl.closed}</div></div>
+          <div class="stat"><div class="label">Total</div><div class="value">${pl.total}</div></div>
+          <div class="stat"><div class="label">Oldest open</div><div class="value">${pl.ageDays ? pl.ageDays + ' d' : '—'}</div></div>
+        </div>
+        ${pl.total ? `<div style="margin-top:14px"><div class="progress"><div class="bar green" style="width:${Math.round(pl.closed/pl.total*100)}%"></div></div></div>` : ''}
+      </div>
+      <div class="card">
+        <h3>Warranty</h3>
+        <div class="stat-grid">
+          <div class="stat"><div class="label">Warranty start</div><div class="value" style="font-size:14px">${fmtDate(co.warrantyStart)}</div></div>
+          <div class="stat"><div class="label">Warranty end</div><div class="value" style="font-size:14px">${fmtDate(co.warrantyEnd)}</div></div>
+          <div class="stat"><div class="label">Status</div><div class="value">${co.warrantyEnd ? (new Date(co.warrantyEnd) > TODAY ? '<span class="pill green">Active</span>' : '<span class="pill muted">Expired</span>') : '<span class="pill muted">—</span>'}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Closeout deliverables</h3>
+      <div class="table-wrap"><table class="gate-matrix"><thead><tr><th>Item</th><th>Status</th><th>Received</th><th>Approved</th><th>Notes</th></tr></thead><tbody>
+        ${gateRow('As-builts / red-lines', co.asBuilts)}
+        ${gateRow('Record drawings', co.recordDrawings)}
+        ${gateRow('Bill of sale (to MUD)', co.conveyance.billOfSale)}
+        ${gateRow('Easements conveyed to MUD', co.conveyance.easementsToMud)}
+        ${gateRow("Engineer's certification (TCEQ form)", co.engineersCert)}
+        ${gateRow('Final TCEQ approval to operate', co.finalTceqApproval)}
+        ${gateRow('Owner acceptance letter', co.ownerAcceptance)}
+      </tbody></table></div>
+    </div>
+  `;
+}
+
+/* ----- Tab: Team ----- */
+function renderTeam(p) {
+  const rows = p.team.map(t => `<tr>
+    <td><span class="pill navy">${t.role}</span></td>
+    <td><div class="name">${t.name}</div></td>
+    <td>${t.firm}</td>
+    <td><a href="mailto:${t.email}">${t.email}</a></td>
+    <td>${t.phone}</td>
+  </tr>`).join('');
+  $$('#pane-team').innerHTML = `
+    <div class="card">
+      <h3>Project team (${p.team.length})</h3>
+      ${rows ? `<div class="table-wrap"><table><thead><tr><th>Role</th><th>Name</th><th>Firm</th><th>Email</th><th>Phone</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<div class="empty">No team roster</div>'}
+    </div>
+  `;
+}
+
+/* ========== BOOT ========== */
+renderPortfolio();
+route();
+</script>
+</body>
+</html>
