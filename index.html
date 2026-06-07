@@ -510,6 +510,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <a href="https://outlook.office.com/book/SpecTech@spec-technology.com/?ismsaljsauthenabled" class="btn btn-primary btn-lg">Book an Intro Call &rarr;</a>
         <a href="#" class="btn btn-outline-lt btn-lg" onclick="showPage('industries');return false">Browse workflows by industry</a>
       </div>
+      <a href="#readiness-audit" onclick="document.getElementById('readiness-audit').scrollIntoView({behavior:'smooth'});return false" style="display:inline-flex;align-items:center;gap:7px;margin-top:18px;font-size:14px;font-weight:600;color:var(--teal-2)">New &middot; The AI Readiness Audit — $4,500, credited toward Strata &rarr;</a>
       <div class="hero-stats">
         <div class="hero-stat"><div class="h-val">8</div><div class="h-lbl">Industry Verticals</div></div>
         <div class="hero-stat"><div class="h-val">30+</div><div class="h-lbl">Pre-Built Workflows</div></div>
@@ -550,6 +551,90 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
           <p>Structured, verifiable outputs in minutes — not weeks. Every step logged, explainable, and ready for review.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- AI Readiness Audit (productized engagement) -->
+  <style>
+    .audit-lead{font-size:19px;line-height:1.65;color:var(--muted);max-width:720px;margin:0 0 14px}
+    .audit-lead strong{color:var(--dark)}
+    .audit-body{font-size:16px;line-height:1.7;color:var(--muted);max-width:720px;margin:0}
+    .audit-body strong{color:var(--dark)}
+    .matrix-card{background:var(--dark);border-radius:var(--radius-lg);padding:30px;margin:34px 0;color:#fff}
+    .matrix-card .mtitle{font-size:18px;font-weight:700;color:#fff;margin-bottom:2px;font-family:'Manrope',sans-serif}
+    .matrix-card .msub{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:18px}
+    .matrix-chips{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+    .mchip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:9px 11px;font-size:12.5px;color:rgba(255,255,255,0.88)}
+    .mchip b{flex:none;width:18px;height:18px;border-radius:50%;background:var(--teal);color:#04201f;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+    .verdicts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    .verdict{border-radius:10px;padding:14px 16px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04)}
+    .verdict .vh{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;font-family:'Manrope',sans-serif}
+    .verdict.automate .vh{color:var(--teal-2)}
+    .verdict.harden .vh{color:var(--gold)}
+    .verdict.hold .vh{color:rgba(255,255,255,0.6)}
+    .verdict p{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5}
+    .audit-sub2{display:inline-block;margin-top:30px}
+    .audit-invest{display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap;background:linear-gradient(135deg,var(--dark),#15324d);border-radius:var(--radius-lg);padding:30px 34px;margin-top:34px}
+    .audit-invest .pl{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-2);margin-bottom:8px;font-family:'Manrope',sans-serif}
+    .audit-invest .price{font-size:46px;font-weight:800;color:#fff;line-height:1;font-family:'Manrope',sans-serif}
+    .audit-invest .pterms{font-size:14px;color:rgba(255,255,255,0.7);max-width:280px;line-height:1.6}
+    .audit-closer{text-align:center;font-size:21px;font-weight:700;color:var(--dark);margin-top:32px;font-family:'Manrope',sans-serif}
+    .audit-closer span{color:var(--teal)}
+    @media(max-width:760px){.matrix-chips{grid-template-columns:repeat(2,1fr)}.verdicts{grid-template-columns:1fr}.audit-invest{flex-direction:column;align-items:flex-start}}
+  </style>
+  <section class="bg-surface" id="readiness-audit">
+    <div class="section-inner">
+      <span class="label">Strata Platform &middot; Productized Engagement</span>
+      <h2>The AI Readiness Audit.</h2>
+      <p class="audit-lead"><strong>Stop guessing which workflows are safe for AI. Start deciding.</strong> One fixed-scope audit, scored against the Strata Decision Matrix Framework&trade;.</p>
+      <p class="audit-body">Most companies already have AI running in the shadows — ungoverned, unlogged, and pointed at real data. The audit shows you exactly <strong>what to automate, what to harden, and what to leave alone</strong> — with evidence, not opinion.</p>
+
+      <div class="matrix-card">
+        <div class="mtitle">Strata Decision Matrix Framework&trade;</div>
+        <div class="msub">Every workflow earns its verdict. Scored, sequenced, defensible.</div>
+        <div class="matrix-chips">
+          <div class="mchip"><b>1</b> Data Readiness</div>
+          <div class="mchip"><b>2</b> Context Discipline</div>
+          <div class="mchip"><b>3</b> Sensitivity &amp; Access</div>
+          <div class="mchip"><b>4</b> Deterministic Fit</div>
+          <div class="mchip"><b>5</b> Reasoning Complexity</div>
+          <div class="mchip"><b>6</b> Token &amp; Cost</div>
+          <div class="mchip"><b>7</b> Blast Radius</div>
+          <div class="mchip"><b>8</b> Confidence Required</div>
+          <div class="mchip"><b>9</b> Frequency &amp; ROI</div>
+          <div class="mchip"><b>10</b> Auditability</div>
+        </div>
+        <div class="verdicts">
+          <div class="verdict automate"><div class="vh">Automate</div><p>Strong ROI, controlled risk. Build it.</p></div>
+          <div class="verdict harden"><div class="vh">Harden First</div><p>Real value — one gap to close before it ships.</p></div>
+          <div class="verdict hold"><div class="vh">Hold</div><p>Risk or ROI says not yet — here's why.</p></div>
+        </div>
+      </div>
+
+      <span class="label audit-sub2">What You Get</span>
+      <div class="results-grid">
+        <div class="result-item"><span class="result-chk">✓</span><p><strong>A verdict on every workflow</strong> — Automate, Harden, or Hold, with the reasoning behind it.</p></div>
+        <div class="result-item"><span class="result-chk">✓</span><p><strong>A governance gap map</strong> — where shadow AI and blast-radius exposure sit today.</p></div>
+        <div class="result-item"><span class="result-chk">✓</span><p><strong>A sequenced roadmap</strong> — the right first build, and the Strata scope to deliver it.</p></div>
+      </div>
+
+      <span class="label audit-sub2">How It Works</span>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-num">1</div><h3>Intake</h3><p>A short form on up to five workflows — and who runs them.</p></div>
+        <div class="step-card"><div class="step-num">2</div><h3>Interviews</h3><p>Claudia calls each owner for a tailored 20-minute conversation, recorded.</p></div>
+        <div class="step-card"><div class="step-num">3</div><h3>Readout</h3><p>A scored report — form and interviews together — inside two weeks.</p></div>
+      </div>
+
+      <div class="audit-invest">
+        <div>
+          <div class="pl">Investment</div>
+          <div class="price">$4,500 <span style="font-size:16px;font-weight:500;color:rgba(255,255,255,0.6)">flat, fixed scope</span></div>
+        </div>
+        <div class="pterms"><strong style="color:#fff">Credited in full</strong> toward your Strata engagement. Up to five workflows. Two-week turnaround.</div>
+        <a href="https://outlook.office.com/book/SpecTech@spec-technology.com/?ismsaljsauthenabled" class="btn btn-primary btn-lg">Book an Intro Call &rarr;</a>
+      </div>
+
+      <p class="audit-closer">Know what's ready. Know what's exposed. <span>Know what to build first.</span></p>
     </div>
   </section>
 
@@ -1423,6 +1508,43 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
     </div>
   </footer>
 </div>
+
+<!-- Floating "Book a call" CTA + modal (site-wide) -->
+<style>
+  #call-fab{position:fixed;right:20px;bottom:20px;z-index:90;display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;border:none;border-radius:999px;padding:13px 20px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,0.28);transition:transform .15s,background .15s}
+  #call-fab:hover{background:var(--teal-2);transform:translateY(-2px)}
+  #call-fab svg{width:18px;height:18px}
+  .call-overlay{position:fixed;inset:0;z-index:100;background:rgba(15,30,40,0.55);display:none;align-items:center;justify-content:center;padding:20px}
+  .call-overlay.show{display:flex}
+  .call-box{position:relative;background:#fff;border-radius:18px;max-width:420px;width:100%;padding:36px;box-shadow:0 30px 80px rgba(0,0,0,0.35);text-align:center}
+  .call-box h3{font-size:22px;color:var(--dark);margin:10px 0 8px;font-family:'Manrope',sans-serif}
+  .call-box>p{font-size:14.5px;color:var(--muted);line-height:1.6;margin-bottom:22px}
+  .call-x{position:absolute;top:12px;right:16px;background:none;border:none;font-size:28px;line-height:1;color:var(--muted);cursor:pointer}
+  .call-or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin:18px 0}
+  .call-or::before,.call-or::after{content:"";flex:1;height:1px;background:var(--border)}
+  .call-num{display:inline-flex;align-items:center;gap:10px;font-size:24px;font-weight:800;color:var(--dark);font-family:'Manrope',sans-serif}
+  .call-num svg{width:20px;height:20px;stroke:var(--teal);fill:none}
+  @media(max-width:768px){#call-fab{right:14px;bottom:14px;padding:12px 16px}}
+</style>
+<button id="call-fab" type="button" onclick="toggleCall(true)" aria-label="Book a call">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+  Book a call
+</button>
+<div id="call-modal" class="call-overlay" onclick="if(event.target===this)toggleCall(false)">
+  <div class="call-box" role="dialog" aria-modal="true" aria-labelledby="call-title">
+    <button class="call-x" type="button" onclick="toggleCall(false)" aria-label="Close">&times;</button>
+    <span class="label">Talk to us</span>
+    <h3 id="call-title">Book your Readiness Audit intro call.</h3>
+    <p>A 30-minute conversation to scope your workflows. Book online, or call us directly.</p>
+    <a href="https://outlook.office.com/book/SpecTech@spec-technology.com/?ismsaljsauthenabled" target="_blank" rel="noopener" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Book online &rarr;</a>
+    <div class="call-or"><span>or call</span></div>
+    <a href="tel:+18444554058" class="call-num"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>(844) 455-4058</a>
+  </div>
+</div>
+<script>
+function toggleCall(open){var m=document.getElementById('call-modal');if(!m)return;m.classList.toggle('show',open);document.body.style.overflow=open?'hidden':'';}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')toggleCall(false);});
+</script>
 
 <script>
 var activeV = 'engineering';
