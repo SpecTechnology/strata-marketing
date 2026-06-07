@@ -15,7 +15,7 @@
   --navy:       #0a0f12;
   --navy-2:     #0a0f12;
   --navy-pale:  #e8f3f4;
-  --teal:       #40868B;
+  --teal:       #3a7a7f;
   --teal-2:     #4da0a6;
   --teal-pale:  #e8f3f4;
   --gold:       #D99A3D;
@@ -47,7 +47,7 @@ h4 { color: var(--text); }
 .label {
   font-family: 'Manrope', sans-serif;
   font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 14px;
+  text-transform: uppercase; color: #8f6210; display: block; margin-bottom: 14px;
 }
 .label.lt { color: var(--gold-2); }
 .label.gd { color: var(--gold-2); }
@@ -228,7 +228,7 @@ nav {
 }
 .dlp-panel-title {
   font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3);
+  letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.62);
   margin-bottom: 16px;
 }
 .dlp-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -250,7 +250,7 @@ nav {
 }
 .dlp-gold-badge span {
   font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase; color: var(--gold-2);
+  letter-spacing: 2px; text-transform: uppercase; color: #8a5e0e;
 }
 
 /* Industry tabs */
@@ -310,7 +310,7 @@ nav {
   display: inline-flex; align-items: center; gap: 4px; margin-top: 8px;
   background: rgba(179,123,40,0.1); border: 1px solid rgba(179,123,40,0.22);
   padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700;
-  color: var(--gold); font-family: 'Manrope', sans-serif; letter-spacing: 0.5px;
+  color: #8f6210; font-family: 'Manrope', sans-serif; letter-spacing: 0.5px;
 }
 
 /* Results */
@@ -361,16 +361,16 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
 .ft-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
 .ft-logo-lockup { display: flex; align-items: flex-start; margin-bottom: 14px; }
 .ft-logo-img { height: 32px; width: auto; display: block; background: white; padding: 5px 10px; border-radius: 5px; }
-.ft-logo p { font-size: 13px; color: rgba(255,255,255,0.42); line-height: 1.7; max-width: 240px; }
+.ft-logo p { font-size: 13px; color: rgba(255,255,255,0.62); line-height: 1.7; max-width: 240px; }
 .ft-col h4 {
   font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.28);
+  letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.66);
   margin-bottom: 16px;
 }
 .ft-col a { display: block; font-size: 13.5px; color: rgba(255,255,255,0.5); padding: 4px 0; cursor: pointer; transition: color 180ms ease; }
 .ft-col a:hover { color: var(--white); }
 .ft-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-.ft-bottom span { font-size: 12px; color: rgba(255,255,255,0.28); }
+.ft-bottom span { font-size: 12px; color: rgba(255,255,255,0.6); }
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -428,7 +428,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
 }
 .gate-input:focus { outline: none; border-color: var(--teal); }
 .gate-input::placeholder { color: rgba(255,255,255,0.3); }
-.gate-note { font-size: 11.5px; color: rgba(255,255,255,0.25); text-align: center; margin-top: 14px; }
+.gate-note { font-size: 11.5px; color: rgba(255,255,255,0.66); text-align: center; margin-top: 14px; }
 .demo-frame { display: none; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.45); }
 .demo-frame-bar {
   display: flex; align-items: center; justify-content: space-between;
@@ -565,7 +565,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
     .matrix-card .msub{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:18px}
     .matrix-chips{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
     .mchip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:9px 11px;font-size:12.5px;color:rgba(255,255,255,0.88)}
-    .mchip b{flex:none;width:18px;height:18px;border-radius:50%;background:var(--teal);color:#04201f;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+    .mchip b{flex:none;width:18px;height:18px;border-radius:50%;background:var(--teal-pale);color:#0a3d3a;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
     .verdicts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
     .verdict{border-radius:10px;padding:14px 16px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04)}
     .verdict .vh{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;font-family:'Manrope',sans-serif}
@@ -848,7 +848,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
             <img src="strata-logo-horizontal.png" alt="StrataAI" class="ft-logo-img">
           </div>
           <p>Managed AI workflow automation for regulated industries. Every output source-cited. Every run audited. Built by SpecTech.</p>
-          <p style="margin-top:12px;font-size:11px;font-family:'Manrope',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.22)">Automate &bull; Analyze &bull; Act</p>
+          <p style="margin-top:12px;font-size:11px;font-family:'Manrope',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.6)">Automate &bull; Analyze &bull; Act</p>
         </div>
         <div class="ft-col">
           <h4>Platform</h4>
@@ -1409,7 +1409,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <span>&copy; 2026 SpecTech. All rights reserved.</span>
         <span style="display:inline-flex;gap:22px;align-items:center">
           <a href="https://spectechnology.github.io/spectech-site/" target="_blank" rel="noopener" style="color:var(--teal-2);font-weight:600">Visit SpecTech &#8599;</a>
-          <a onclick="showPage('home')" style="cursor:pointer;color:rgba(255,255,255,0.4)">← Back</a>
+          <a onclick="showPage('home')" style="cursor:pointer;color:rgba(255,255,255,0.6)">← Back</a>
         </span>
       </div>
     </div>
@@ -1455,7 +1455,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <span>&copy; 2026 SpecTech. All rights reserved.</span>
         <span style="display:inline-flex;gap:22px;align-items:center">
           <a href="https://spectechnology.github.io/spectech-site/" target="_blank" rel="noopener" style="color:var(--teal-2);font-weight:600">Visit SpecTech &#8599;</a>
-          <a onclick="showPage('home')" style="cursor:pointer;color:rgba(255,255,255,0.4)">← Back</a>
+          <a onclick="showPage('home')" style="cursor:pointer;color:rgba(255,255,255,0.6)">← Back</a>
         </span>
       </div>
     </div>
@@ -1502,7 +1502,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
         <span>&copy; 2026 SpecTech. All rights reserved.</span>
         <span style="display:inline-flex;gap:22px;align-items:center">
           <a href="https://spectechnology.github.io/spectech-site/" target="_blank" rel="noopener" style="color:var(--teal-2);font-weight:600">Visit SpecTech &#8599;</a>
-          <a onclick="showPage('home')" style="cursor:pointer;color:rgba(255,255,255,0.4)">← Back</a>
+          <a onclick="showPage('home')" style="cursor:pointer;color:rgba(255,255,255,0.6)">← Back</a>
         </span>
       </div>
     </div>
