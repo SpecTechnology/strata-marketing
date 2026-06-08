@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StrataAI — Managed AI Workflows for Regulated Industries | SpecTech</title>
 <meta name="description" content="Pre-built, governed AI workflows for civil engineers, land developers, healthcare organizations, legal teams, CRE portfolio managers, and contractors. Source-cited. Audit-ready. Built by SpecTech.">
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P3J1ELJZQH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-P3J1ELJZQH');
+  // SPA section tracking — fire a page_view when the view changes (no URL change)
+  function gaView(path, title){ if(window.gtag){ gtag('event','page_view',{page_path:path, page_title:title, page_location:location.origin+location.pathname+path}); } }
+</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='0' y='6' width='32' height='5' rx='1' fill='%2340868b'/><rect x='0' y='13' width='22' height='5' rx='1' fill='%23b37b28'/><rect x='10' y='20' width='22' height='5' rx='1' fill='%23b37b28'/><rect x='0' y='27' width='32' height='5' rx='1' fill='%231f4e79'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1553,6 +1563,7 @@ function showPage(p) {
   document.querySelectorAll('.page').forEach(function(el) { el.classList.remove('active'); });
   var pg = document.getElementById('page-' + p);
   if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
+  gaView('/' + p, 'StrataAI — ' + p);
   return false;
 }
 
@@ -1567,6 +1578,7 @@ function showVertical(v) {
   tabs.forEach(function(t) { t.classList.remove('active'); });
   var idx = order.indexOf(v);
   if (idx >= 0 && tabs[idx]) tabs[idx].classList.add('active');
+  gaView('/industries/' + v, 'StrataAI — ' + v);
   return false;
 }
 
@@ -1578,6 +1590,7 @@ function switchTab(v, el) {
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   if (el) el.classList.add('active');
   window.scrollTo(0, 66);
+  gaView('/industries/' + v, 'StrataAI — ' + v);
 }
 
 function scrollToDemo(v) {
