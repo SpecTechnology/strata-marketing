@@ -122,6 +122,8 @@ nav {
 }
 .nav-links a:hover { color: var(--teal); background: var(--teal-pale); }
 .nav-actions { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.nav-back { display: inline-flex; align-items: center; gap: 4px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; color: var(--muted); padding: 6px 12px; border-radius: 6px; transition: all 180ms ease; white-space: nowrap; }
+.nav-back:hover { color: var(--teal); background: var(--teal-pale); }
 
 /* — Pages — */
 .page { display: none; padding-top: 66px; }
@@ -500,6 +502,7 @@ footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07); 
       <a href="#" onclick="showPage('audit');return false">Security</a>
     </div>
     <div class="nav-actions">
+      <a href="https://spectechai.com" class="nav-back" title="Back to SpecTech">SpecTech &#8599;</a>
       <a href="#" class="btn btn-outline btn-sm">Ask a Question</a>
     </div>
   </div>
